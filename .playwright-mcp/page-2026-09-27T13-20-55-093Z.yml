@@ -1,0 +1,186 @@
+- generic [ref=e2]:
+  - link "Skip to content" [ref=e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Ringnova home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]: ringnova
+      - generic [ref=e12]:
+        - navigation "Main navigation" [ref=e13]:
+          - link "Services" [ref=e14] [cursor=pointer]:
+            - /url: /services
+          - link "About us" [ref=e15] [cursor=pointer]:
+            - /url: /about
+          - link "Contact" [ref=e16] [cursor=pointer]:
+            - /url: /contact
+        - link "Let’s talk" [ref=e17] [cursor=pointer]:
+          - /url: /contact
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - paragraph [ref=e24]: YOUR PEOPLE-FIRST CALL CENTER PARTNER
+          - heading [level=1] [ref=e26]:
+            - text: Every conversation is a chance to
+            - emphasis [ref=e27]: grow.
+          - paragraph [ref=e28]: Flexible customer communication for ambitious businesses. We help you show up, follow through, and make every conversation count.
+          - generic [ref=e29]:
+            - link "Let’s talk about your needs" [ref=e30] [cursor=pointer]:
+              - /url: /contact
+            - link "Explore our services" [ref=e33] [cursor=pointer]:
+              - /url: /services
+          - generic [ref=e36]:
+            - generic [aria-hidden] [ref=e37]:
+              - generic [ref=e38]: R
+              - generic [ref=e39]: "N"
+              - generic [ref=e40]: +
+            - generic [ref=e41]:
+              - text: Thoughtful support.
+              - strong [ref=e42]: Tailored to your team.
+        - img "Illustration of a Ringnova client conversation" [ref=e43]:
+          - generic [ref=e51]:
+            - strong [ref=e52]: A real person.
+            - generic [ref=e53]: Ready to listen.
+          - generic [ref=e71]:
+            - generic [ref=e72]: FR
+            - generic [ref=e73]:
+              - strong [ref=e74]: Bonjour!
+              - generic [ref=e75]: Multilingual support
+          - generic [ref=e78]: ✳
+          - generic [ref=e79]: ✳
+          - generic [ref=e80]: The human touch,built around your business.
+      - generic [ref=e81]:
+        - generic [ref=e82]: BUILT FOR YOUR NEXT CHAPTER
+        - generic [ref=e83]:
+          - generic [ref=e84]: STARTUPS
+          - generic [ref=e86]: E-COMMERCE
+          - generic [ref=e88]: SAAS
+          - generic [ref=e90]: AGENCIES
+    - generic [ref=e92]:
+      - generic [ref=e93]:
+        - paragraph [ref=e94]: MORE THAN A VOICE ON THE LINE
+        - heading [level=2] [ref=e96]:
+          - text: Make room for the work
+          - emphasis [ref=e97]: only you can do.
+      - generic [ref=e98]:
+        - paragraph [ref=e99]: Growing a business means showing up for every customer, prospect, and opportunity. Ringnova gives you a responsive team to help make those conversations happen—without losing the personal touch.
+        - link "Get to know Ringnova" [ref=e100] [cursor=pointer]:
+          - /url: /about
+    - generic [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - paragraph [ref=e107]: WHAT WE CAN HELP WITH
+          - heading [level=2] [ref=e109]:
+            - text: Good conversations.
+            - emphasis [ref=e110]: Better business.
+        - generic [ref=e111]:
+          - paragraph [ref=e112]: From the first hello to the next appointment, get flexible support built around your priorities.
+          - link "See all services" [ref=e113] [cursor=pointer]:
+            - /url: /services
+      - generic [ref=e116]:
+        - article [ref=e117]:
+          - generic [ref=e118]: "01"
+          - heading "Customer support" [level=3] [ref=e123]
+          - paragraph [ref=e124]: Thoughtful, responsive customer care that helps every interaction feel like a good one.
+          - link "Explore service" [ref=e125] [cursor=pointer]:
+            - /url: /services
+        - article [ref=e128]:
+          - generic [ref=e129]: "02"
+          - heading "Inbound & outbound calls" [level=3] [ref=e134]
+          - paragraph [ref=e135]: A dependable extension of your team for the conversations your business needs to have.
+          - link "Explore service" [ref=e136] [cursor=pointer]:
+            - /url: /services
+        - article [ref=e139]:
+          - generic [ref=e140]: "03"
+          - heading "Lead generation" [level=3] [ref=e146]
+          - paragraph [ref=e147]: Build meaningful connections with prospects and give your pipeline room to grow.
+          - link "Explore service" [ref=e148] [cursor=pointer]:
+            - /url: /services
+        - article [ref=e151]:
+          - generic [ref=e152]: "04"
+          - heading "Appointment setting" [level=3] [ref=e158]
+          - paragraph [ref=e159]: Make it easier for the right people to get a conversation on the calendar.
+          - link "Explore service" [ref=e160] [cursor=pointer]:
+            - /url: /services
+    - generic [ref=e164]:
+      - generic [ref=e165]:
+        - generic [ref=e166]:
+          - generic [ref=e167]: YOUR TEAM,IN YOUR CORNER.
+          - generic [ref=e176]: Made to fit your business
+        - generic [ref=e182]:
+          - strong [ref=e183]: 3 languages
+          - generic [ref=e184]: One connected team
+      - generic [ref=e185]:
+        - paragraph [ref=e186]: A FLEXIBLE WAY FORWARD
+        - heading [level=2] [ref=e188]:
+          - text: Your business isn’t
+          - emphasis [ref=e189]: one-size-fits-all.
+        - paragraph [ref=e190]: So your customer communication shouldn’t be either. We take time to understand how you work and shape a support approach around what your business actually needs.
+        - list [ref=e191]:
+          - listitem [ref=e192]: Responsive, reliable communication
+          - listitem [ref=e196]: English, French, and Arabic support
+          - listitem [ref=e200]: Flexible onboarding, tailored to you
+        - link "How we work" [ref=e204] [cursor=pointer]:
+          - /url: /about
+    - generic [ref=e208]:
+      - generic [ref=e209]:
+        - paragraph [ref=e210]: CONNECTION HAS NO BORDERS
+        - heading [level=2] [ref=e212]:
+          - text: Speak their language.
+          - emphasis [ref=e213]: Make it personal.
+      - generic [ref=e214]:
+        - generic [ref=e215]:
+          - generic [ref=e216]: EN
+          - strong [ref=e217]: English
+          - generic [ref=e218]: Clear, confident conversations
+        - generic [ref=e219]:
+          - generic [ref=e220]: FR
+          - strong [ref=e221]: Français
+          - generic [ref=e222]: Une expérience attentionnée
+        - generic [ref=e223]:
+          - generic [ref=e224]: ع
+          - strong [ref=e225]: العربية
+          - generic [ref=e226]: تواصل إنساني ومميز
+    - generic [ref=e228]:
+      - generic [ref=e233]:
+        - paragraph [ref=e234]: LET’S START A CONVERSATION
+        - heading [level=2] [ref=e236]:
+          - text: Ready for a little more
+          - emphasis [ref=e237]: breathing room?
+        - paragraph [ref=e238]: Tell us what your customers need. We’ll talk through an approach that fits your business.
+        - link "Book a consultation" [ref=e239] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=e245]:
+        - text: It starts with
+        - strong [ref=e246]: a hello.
+  - contentinfo [ref=e249]:
+    - generic [ref=e250]:
+      - generic [ref=e251]:
+        - generic [ref=e252]:
+          - link "Ringnova home" [ref=e253] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e258]: ringnova
+          - paragraph [ref=e259]: Good conversations makebusiness better.
+        - generic [ref=e260]:
+          - paragraph [ref=e261]: Explore
+          - link "Our services" [ref=e262] [cursor=pointer]:
+            - /url: /services
+          - link "About Ringnova" [ref=e263] [cursor=pointer]:
+            - /url: /about
+          - link "Get in touch" [ref=e264] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=e265]:
+          - paragraph [ref=e266]: Let’s connect
+          - generic [ref=e267]: Serving businesses across Europe
+          - generic [ref=e268]: Team based in Morocco
+          - generic [ref=e269]: English · Français · العربية
+        - link "Back to top" [ref=e270] [cursor=pointer]:
+          - /url: "#top"
+      - generic [ref=e273]:
+        - generic [ref=e274]: © 2026 Ringnova. All rights reserved.
+        - link "Privacy policy Placeholder" [ref=e275] [cursor=pointer]:
+          - /url: /privacy
+          - text: Privacy policy
+          - generic [ref=e276]: Placeholder
+        - generic [ref=e277]: Made for better conversations.

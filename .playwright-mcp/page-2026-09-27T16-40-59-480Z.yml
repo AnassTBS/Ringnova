@@ -1,0 +1,60 @@
+- generic [ref=f225e2]:
+  - link "Skip to content" [ref=f225e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f225e4]:
+    - generic [ref=f225e5]:
+      - link "Ringnova home" [ref=f225e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f225e7]:
+        - navigation "Main navigation" [ref=f225e8]:
+          - link "Services" [ref=f225e9] [cursor=pointer]:
+            - /url: /services
+          - link "About us" [ref=f225e10] [cursor=pointer]:
+            - /url: /about
+          - link "Contact" [ref=f225e11] [cursor=pointer]:
+            - /url: /contact
+        - link "Let’s talk" [ref=f225e12] [cursor=pointer]:
+          - /url: /contact
+  - main [ref=f225e15]:
+    - generic [ref=f225e18]:
+      - paragraph [ref=f225e19]: PRIVACY
+      - heading [level=1] [ref=f225e21]:
+        - text: Privacy, with
+        - emphasis [ref=f225e22]: care.
+      - paragraph [ref=f225e23]: This page is a placeholder and is not a complete privacy policy. Approved legal text must be added before the site is published.
+    - generic [ref=f225e25]:
+      - generic [ref=f225e26]: POLICY PLACEHOLDER
+      - heading "Privacy policy to be supplied" [level=2] [ref=f225e27]
+      - paragraph [ref=f225e28]: This preview does not connect the consultation form to a backend or store submitted details. No analytics or advertising cookies have been added. These statements should be reviewed and replaced with Ringnova’s approved privacy information before launch.
+      - paragraph [ref=f225e29]: The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.
+      - link "Back to contact" [ref=f225e30] [cursor=pointer]:
+        - /url: /contact
+  - contentinfo [ref=f225e33]:
+    - generic [ref=f225e34]:
+      - generic [ref=f225e35]:
+        - generic [ref=f225e36]:
+          - link "Ringnova home" [ref=f225e37] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=f225e38]: Good conversations makebusiness better.
+        - generic [ref=f225e39]:
+          - paragraph [ref=f225e40]: Explore
+          - link "Our services" [ref=f225e41] [cursor=pointer]:
+            - /url: /services
+          - link "About Ringnova" [ref=f225e42] [cursor=pointer]:
+            - /url: /about
+          - link "Get in touch" [ref=f225e43] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=f225e44]:
+          - paragraph [ref=f225e45]: Let’s connect
+          - generic [ref=f225e46]: Serving businesses across Europe
+          - generic [ref=f225e47]: Team based in Morocco
+          - generic [ref=f225e48]: English · Français · العربية
+        - link "Back to top" [ref=f225e49] [cursor=pointer]:
+          - /url: "#top"
+      - generic [ref=f225e52]:
+        - generic [ref=f225e53]: © 2026 Ringnova. All rights reserved.
+        - link "Privacy policy Placeholder" [ref=f225e54] [cursor=pointer]:
+          - /url: /privacy
+          - text: Privacy policy
+          - generic [ref=f225e55]: Placeholder
+        - generic [ref=f225e56]: Made for better conversations.

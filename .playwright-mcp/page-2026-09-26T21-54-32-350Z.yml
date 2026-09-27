@@ -1,0 +1,108 @@
+- generic [ref=f10e2]:
+  - link "Skip to content" [ref=f10e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f10e4]:
+    - generic [ref=f10e5]:
+      - link "Ringnova home" [ref=f10e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f10e11]: ringnova
+      - button "Open navigation menu" [ref=f10e12] [cursor=pointer]
+  - main [ref=f10e15]:
+    - generic [ref=f10e17]:
+      - generic [ref=f10e18]:
+        - paragraph [ref=f10e19]: CONTACT
+        - heading [level=1] [ref=f10e21]:
+          - text: Tell us what’s onyour
+          - emphasis [ref=f10e22]: mind.
+        - paragraph [ref=f10e23]: Looking for a more thoughtful way to support your customers or grow your outreach? We’d love to hear what you have in mind.
+      - generic [ref=f10e25]:
+        - generic [ref=f10e29]: LET’S TALK
+        - generic [ref=f10e30]: ↗
+    - generic [ref=f10e32]:
+      - generic [ref=f10e33]:
+        - paragraph [ref=f10e34]: START WITH A HELLO
+        - heading [level=2] [ref=f10e36]:
+          - text: A good fit starts with a
+          - emphasis [ref=f10e37]: good conversation.
+        - paragraph [ref=f10e38]: Share a little about your business and what you’re looking for. We’ll use it to understand what matters to you and explore next steps together.
+        - generic [ref=f10e39]:
+          - generic [ref=f10e45]:
+            - strong [ref=f10e46]: Based in Morocco
+            - generic [ref=f10e47]: Working with businesses across Europe
+          - generic [ref=f10e52]:
+            - strong [ref=f10e53]: Here to listen
+            - generic [ref=f10e54]: Onboarding shaped around your needs
+          - generic [ref=f10e55]:
+            - generic [ref=f10e56]: EN · FR · ع
+            - generic [ref=f10e58]:
+              - strong [ref=f10e59]: Speak your language
+              - generic [ref=f10e60]: English, French, and Arabic support
+        - generic [ref=f10e61]: No pressure. Just a conversation.
+      - generic [ref=f10e62]:
+        - generic [ref=f10e63]:
+          - generic [ref=f10e64]: 01 02
+          - strong [ref=f10e66]: Tell us a little about yourself
+        - generic [ref=f10e67]:
+          - generic [ref=f10e68]:
+            - generic [ref=f10e69]:
+              - text: Your name
+              - textbox "Your name" [ref=f10e70]:
+                - /placeholder: Alex Morgan
+            - generic [ref=f10e71]:
+              - text: Work email
+              - textbox "Work email" [ref=f10e72]:
+                - /placeholder: alex@company.com
+          - generic [ref=f10e73]:
+            - text: Company
+            - textbox "Company" [ref=f10e74]:
+              - /placeholder: Your company name
+          - generic [ref=f10e75]:
+            - text: What can we help with?
+            - combobox "What can we help with?" [ref=f10e76]:
+              - option "Select a service" [disabled] [selected]
+              - option "Customer support"
+              - option "Inbound & outbound calls"
+              - option "Lead generation"
+              - option "Appointment setting"
+              - option "Telemarketing"
+              - option "Something else"
+          - generic [ref=f10e77]:
+            - text: A little about what you need
+            - textbox "A little about what you need" [ref=f10e78]:
+              - /placeholder: Tell us about your business and what you’re looking for…
+          - button "Request a consultation" [ref=f10e79] [cursor=pointer]
+          - paragraph [ref=f10e82]:
+            - text: Your details won’t be stored or sent through this preview form. Read our
+            - link "privacy policy placeholder" [ref=f10e83] [cursor=pointer]:
+              - /url: /privacy
+            - text: .
+  - contentinfo [ref=f10e84]:
+    - generic [ref=f10e85]:
+      - generic [ref=f10e86]:
+        - generic [ref=f10e87]:
+          - link "Ringnova home" [ref=f10e88] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f10e93]: ringnova
+          - paragraph [ref=f10e94]: Good conversations makebusiness better.
+        - generic [ref=f10e95]:
+          - paragraph [ref=f10e96]: Explore
+          - link "Our services" [ref=f10e97] [cursor=pointer]:
+            - /url: /services
+          - link "About Ringnova" [ref=f10e98] [cursor=pointer]:
+            - /url: /about
+          - link "Get in touch" [ref=f10e99] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=f10e100]:
+          - paragraph [ref=f10e101]: Let’s connect
+          - generic [ref=f10e102]: Serving businesses across Europe
+          - generic [ref=f10e103]: Team based in Morocco
+          - generic [ref=f10e104]: English · Français · العربية
+        - link "Back to top" [ref=f10e105] [cursor=pointer]:
+          - /url: "#top"
+      - generic [ref=f10e108]:
+        - generic [ref=f10e109]: © 2026 Ringnova. All rights reserved.
+        - link "Privacy policy Placeholder" [ref=f10e110] [cursor=pointer]:
+          - /url: /privacy
+          - text: Privacy policy
+          - generic [ref=f10e111]: Placeholder
+        - generic [ref=f10e112]: Made for better conversations.

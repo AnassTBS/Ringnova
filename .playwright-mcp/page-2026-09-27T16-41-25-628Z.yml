@@ -1,0 +1,102 @@
+- generic [ref=f226e2]:
+  - link "Skip to content" [ref=f226e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f226e4]:
+    - generic [ref=f226e5]:
+      - link "Ringnova home" [ref=f226e6] [cursor=pointer]:
+        - /url: /
+      - button "Open navigation menu" [ref=f226e7] [cursor=pointer]
+  - main [ref=f226e10]:
+    - generic [ref=f226e12]:
+      - generic [ref=f226e13]:
+        - paragraph [ref=f226e14]: OUR SERVICES
+        - heading [level=1] [ref=f226e16]:
+          - text: The right support.
+          - emphasis [ref=f226e17]: When it matters.
+        - paragraph [ref=f226e18]: Flexible customer communication for the moments that move your business forward. Start with what you need; we’ll shape the rest together.
+      - img "A support professional speaking with a customer in a bright team workspace" [ref=f226e20]
+    - generic [ref=f226e22]:
+      - generic [ref=f226e23]:
+        - paragraph [ref=f226e24]: HOW WE CAN HELP
+        - heading [level=2] [ref=f226e26]:
+          - text: One thoughtful team.
+          - emphasis [ref=f226e27]: More ways to connect.
+      - generic [ref=f226e28]:
+        - article [ref=f226e29]:
+          - generic [ref=f226e30]: "01"
+          - generic [ref=f226e34]:
+            - heading "Customer support" [level=3] [ref=f226e35]
+            - paragraph [ref=f226e36]: Thoughtful, responsive customer care that helps every interaction feel like a good one.
+        - article [ref=f226e39]:
+          - generic [ref=f226e40]: "02"
+          - generic [ref=f226e44]:
+            - heading "Inbound & outbound calls" [level=3] [ref=f226e45]
+            - paragraph [ref=f226e46]: A dependable extension of your team for the conversations your business needs to have.
+        - article [ref=f226e49]:
+          - generic [ref=f226e50]: "03"
+          - generic [ref=f226e55]:
+            - heading "Lead generation" [level=3] [ref=f226e56]
+            - paragraph [ref=f226e57]: Build meaningful connections with prospects and give your pipeline room to grow.
+        - article [ref=f226e60]:
+          - generic [ref=f226e61]: "04"
+          - generic [ref=f226e66]:
+            - heading "Appointment setting" [level=3] [ref=f226e67]
+            - paragraph [ref=f226e68]: Make it easier for the right people to get a conversation on the calendar.
+        - article [ref=f226e71]:
+          - generic [ref=f226e72]: "05"
+          - generic [ref=f226e76]:
+            - heading "Telemarketing" [level=3] [ref=f226e77]
+            - paragraph [ref=f226e78]: Personal, professional outreach shaped around your audience and business goals.
+      - generic [ref=f226e81]:
+        - generic [ref=f226e82]: ✳
+        - paragraph [ref=f226e83]: Not sure what fits? That’s what the first conversation is for. We’ll listen, learn about your business, and explore what could work.
+        - link "Let’s figure it out" [ref=f226e84] [cursor=pointer]:
+          - /url: /contact
+    - generic [ref=f226e88]:
+      - generic [ref=f226e89]:
+        - paragraph [ref=f226e90]: YOUR CUSTOMERS, YOUR LANGUAGES
+        - heading [level=2] [ref=f226e92]:
+          - text: Connected across
+          - emphasis [ref=f226e93]: every conversation.
+      - paragraph [ref=f226e94]: Our Morocco-based team supports European businesses in English, French, and Arabic. We’ll discuss your customers, communication needs, and a suitable approach together.
+    - generic [ref=f226e96]:
+      - generic [ref=f226e101]:
+        - paragraph [ref=f226e102]: LET’S START A CONVERSATION
+        - heading [level=2] [ref=f226e104]:
+          - text: Let’s find an approach that
+          - emphasis [ref=f226e105]: fits.
+        - paragraph [ref=f226e106]: Tell us what your business needs. We’ll take it from there, together.
+        - link "Talk to Ringnova" [ref=f226e107] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f226e113]:
+        - text: It starts with
+        - strong [ref=f226e114]: a hello.
+  - contentinfo [ref=f226e117]:
+    - generic [ref=f226e118]:
+      - generic [ref=f226e119]:
+        - generic [ref=f226e120]:
+          - link "Ringnova home" [ref=f226e121] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=f226e122]: Good conversations makebusiness better.
+        - generic [ref=f226e123]:
+          - paragraph [ref=f226e124]: Explore
+          - link "Our services" [ref=f226e125] [cursor=pointer]:
+            - /url: /services
+          - link "About Ringnova" [ref=f226e126] [cursor=pointer]:
+            - /url: /about
+          - link "Get in touch" [ref=f226e127] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=f226e128]:
+          - paragraph [ref=f226e129]: Let’s connect
+          - generic [ref=f226e130]: Serving businesses across Europe
+          - generic [ref=f226e131]: Team based in Morocco
+          - generic [ref=f226e132]: English · Français · العربية
+        - link "Back to top" [ref=f226e133] [cursor=pointer]:
+          - /url: "#top"
+      - generic [ref=f226e136]:
+        - generic [ref=f226e137]: © 2026 Ringnova. All rights reserved.
+        - link "Privacy policy Placeholder" [ref=f226e138] [cursor=pointer]:
+          - /url: /privacy
+          - text: Privacy policy
+          - generic [ref=f226e139]: Placeholder
+        - generic [ref=f226e140]: Made for better conversations.

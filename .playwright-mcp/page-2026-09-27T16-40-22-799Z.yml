@@ -1,0 +1,116 @@
+- generic [ref=f223e2]:
+  - link "Skip to content" [ref=f223e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f223e4]:
+    - generic [ref=f223e5]:
+      - link "Ringnova home" [ref=f223e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f223e7]:
+        - navigation "Main navigation" [ref=f223e8]:
+          - link "Services" [ref=f223e9] [cursor=pointer]:
+            - /url: /services
+          - link "About us" [ref=f223e10] [cursor=pointer]:
+            - /url: /about
+          - link "Contact" [ref=f223e11] [cursor=pointer]:
+            - /url: /contact
+        - link "Let’s talk" [ref=f223e12] [cursor=pointer]:
+          - /url: /contact
+  - main [ref=f223e15]:
+    - generic [ref=f223e17]:
+      - generic [ref=f223e18]:
+        - paragraph [ref=f223e19]: ABOUT RINGNOVA
+        - heading [level=1] [ref=f223e21]:
+          - text: Better business startswith
+          - emphasis [ref=f223e22]: being there.
+        - paragraph [ref=f223e23]: We believe the conversations around your business deserve the same care and attention you put into building it.
+      - generic [ref=f223e24]: RN
+    - generic [ref=f223e31]:
+      - generic [ref=f223e32]:
+        - paragraph [ref=f223e33]: OUR POINT OF VIEW
+        - heading [level=2] [ref=f223e35]:
+          - text: Every interaction is a chance to
+          - emphasis [ref=f223e36]: show you care.
+      - generic [ref=f223e37]:
+        - paragraph [ref=f223e38]: Ringnova is a Morocco-based team helping growing businesses across Europe stay close to their customers and prospects. We bring a considered, human approach to customer support and business communication.
+        - paragraph [ref=f223e39]: We know no two businesses work the same way. That’s why we start by listening—then shape a flexible way of working around your needs, your customers, and the conversations that matter to you.
+        - link "Start a conversation" [ref=f223e40] [cursor=pointer]:
+          - /url: /contact
+    - generic [ref=f223e44]:
+      - generic [ref=f223e45]:
+        - paragraph [ref=f223e46]: WHAT YOU CAN EXPECT
+        - heading [level=2] [ref=f223e48]:
+          - text: A good partner makes
+          - emphasis [ref=f223e49]: things feel simpler.
+      - generic [ref=f223e50]:
+        - article [ref=f223e51]:
+          - generic [ref=f223e52]: "01"
+          - generic [ref=f223e53]:
+            - heading "Reliability" [level=3] [ref=f223e54]
+            - paragraph [ref=f223e55]: Show up with care, follow through, and make dependable communication part of the experience.
+        - article [ref=f223e56]:
+          - generic [ref=f223e57]: "02"
+          - generic [ref=f223e58]:
+            - heading "Responsiveness" [level=3] [ref=f223e59]
+            - paragraph [ref=f223e60]: Stay attentive to your needs and keep communication open as your business evolves.
+        - article [ref=f223e61]:
+          - generic [ref=f223e62]: "03"
+          - generic [ref=f223e63]:
+            - heading "Flexibility" [level=3] [ref=f223e64]
+            - paragraph [ref=f223e65]: Build an approach around your priorities, not a pre-set package that doesn’t fit.
+        - article [ref=f223e66]:
+          - generic [ref=f223e67]: "04"
+          - generic [ref=f223e68]:
+            - heading "Connection" [level=3] [ref=f223e69]
+            - paragraph [ref=f223e70]: Support conversations in English, French, and Arabic for customers across Europe.
+    - generic [ref=f223e72]:
+      - img "Three colleagues collaborating in a bright workspace" [ref=f223e74]
+      - generic [ref=f223e75]:
+        - paragraph [ref=f223e76]: A TEAM THAT STARTS BY LISTENING
+        - heading [level=2] [ref=f223e78]:
+          - text: Thoughtful people.
+          - emphasis [ref=f223e79]: Work that fits.
+        - paragraph [ref=f223e80]: Based in Morocco and working with businesses across Europe, our team brings a personal, multilingual approach to every partnership. We learn what matters to your business before shaping how we can help.
+        - paragraph [ref=f223e81]: From onboarding onward, we keep communication clear, responsive, and tailored to your needs.
+        - link "Meet your next partner" [ref=f223e82] [cursor=pointer]:
+          - /url: /contact
+    - generic [ref=f223e86]:
+      - generic [ref=f223e91]:
+        - paragraph [ref=f223e92]: LET’S START A CONVERSATION
+        - heading [level=2] [ref=f223e94]:
+          - text: Let’s find an approach that
+          - emphasis [ref=f223e95]: fits.
+        - paragraph [ref=f223e96]: Tell us what your business needs. We’ll take it from there, together.
+        - link "Talk to Ringnova" [ref=f223e97] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f223e103]:
+        - text: It starts with
+        - strong [ref=f223e104]: a hello.
+  - contentinfo [ref=f223e107]:
+    - generic [ref=f223e108]:
+      - generic [ref=f223e109]:
+        - generic [ref=f223e110]:
+          - link "Ringnova home" [ref=f223e111] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=f223e112]: Good conversations makebusiness better.
+        - generic [ref=f223e113]:
+          - paragraph [ref=f223e114]: Explore
+          - link "Our services" [ref=f223e115] [cursor=pointer]:
+            - /url: /services
+          - link "About Ringnova" [ref=f223e116] [cursor=pointer]:
+            - /url: /about
+          - link "Get in touch" [ref=f223e117] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=f223e118]:
+          - paragraph [ref=f223e119]: Let’s connect
+          - generic [ref=f223e120]: Serving businesses across Europe
+          - generic [ref=f223e121]: Team based in Morocco
+          - generic [ref=f223e122]: English · Français · العربية
+        - link "Back to top" [ref=f223e123] [cursor=pointer]:
+          - /url: "#top"
+      - generic [ref=f223e126]:
+        - generic [ref=f223e127]: © 2026 Ringnova. All rights reserved.
+        - link "Privacy policy Placeholder" [ref=f223e128] [cursor=pointer]:
+          - /url: /privacy
+          - text: Privacy policy
+          - generic [ref=f223e129]: Placeholder
+        - generic [ref=f223e130]: Made for better conversations.
