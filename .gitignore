@@ -1,0 +1,11 @@
+node_modules/
+dist/
+skill.md
+progress-*.png
+.playwright-mcp/    
+.idea/
+.DS_Store
+.env
+.log
+node_modules/*
+*.md
