@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "./styles.css";
+import { PhoneInputField } from "./PhoneInputField";
 
 /* ─── Animation primitives & Brand Star ───────────────────────────────── */
 
@@ -759,14 +760,6 @@ function ContactForm() {
     if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errs.email = "Please enter a valid work email address.";
     }
-    if (!formData.phone.trim()) errs.phone = "Please enter your phone number.";
-    if (!formData.jobFunction) errs.jobFunction = "Please select your job function.";
-    if (!formData.company.trim()) errs.company = "Please enter your company name.";
-    if (!formData.industry) errs.industry = "Please select your industry.";
-    if (!formData.country) errs.country = "Please select your country.";
-    if (!formData.service) errs.service = "Please select the service you are interested in.";
-    if (!formData.source) errs.source = "Please select how you heard about us.";
-    if (!formData.message.trim()) errs.message = "Please briefly describe the challenge you want Ringnova to help with.";
     if (!formData.consent) errs.consent = "Please agree to the processing of personal data to proceed.";
     return errs;
   };
@@ -891,21 +884,14 @@ function ContactForm() {
             {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
           <div className="form-field">
-            <label htmlFor="phone">
-              Phone Number <span className="required-star">*</span>
-            </label>
-            <input
+            <label htmlFor="phone">Phone Number</label>
+            <PhoneInputField
               id="phone"
               name="phone"
-              type="tel"
-              autoComplete="tel"
-              placeholder="+44 20 7946 0958"
               value={formData.phone}
-              onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.phone}
+              onChange={(val) => setFormData((prev) => ({ ...prev, phone: val }))}
+              placeholder="1 23 45 67 89"
             />
-            {errors.phone && <span className="field-error">{errors.phone}</span>}
           </div>
         </div>
       </fieldset>
@@ -918,18 +904,14 @@ function ContactForm() {
         </legend>
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="jobFunction">
-              Job Function <span className="required-star">*</span>
-            </label>
+            <label htmlFor="jobFunction">Job Function</label>
             <select
               id="jobFunction"
               name="jobFunction"
               value={formData.jobFunction}
               onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.jobFunction}
             >
-              <option value="" disabled>Select your role</option>
+              <option value="">Select your role (optional)</option>
               <option value="Executive (CEO, Founder, MD)">Executive (CEO, Founder, MD)</option>
               <option value="Customer Experience & Support Leader">Customer Experience & Support Leader</option>
               <option value="Sales & Business Development">Sales & Business Development</option>
@@ -937,12 +919,9 @@ function ContactForm() {
               <option value="Marketing & Digital">Marketing & Digital</option>
               <option value="Other role">Other role</option>
             </select>
-            {errors.jobFunction && <span className="field-error">{errors.jobFunction}</span>}
           </div>
           <div className="form-field">
-            <label htmlFor="company">
-              Company <span className="required-star">*</span>
-            </label>
+            <label htmlFor="company">Company</label>
             <input
               id="company"
               name="company"
@@ -951,26 +930,19 @@ function ContactForm() {
               placeholder="Your company name"
               value={formData.company}
               onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.company}
             />
-            {errors.company && <span className="field-error">{errors.company}</span>}
           </div>
         </div>
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="industry">
-              Industry <span className="required-star">*</span>
-            </label>
+            <label htmlFor="industry">Industry</label>
             <select
               id="industry"
               name="industry"
               value={formData.industry}
               onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.industry}
             >
-              <option value="" disabled>Select your industry</option>
+              <option value="">Select your industry (optional)</option>
               <option value="E-commerce & Retail">E-commerce & Retail</option>
               <option value="Software & SaaS">Software & SaaS</option>
               <option value="Professional Services & Agencies">Professional Services & Agencies</option>
@@ -980,21 +952,16 @@ function ContactForm() {
               <option value="Telecommunications & Media">Telecommunications & Media</option>
               <option value="Other industry">Other industry</option>
             </select>
-            {errors.industry && <span className="field-error">{errors.industry}</span>}
           </div>
           <div className="form-field">
-            <label htmlFor="country">
-              Country <span className="required-star">*</span>
-            </label>
+            <label htmlFor="country">Country</label>
             <select
               id="country"
               name="country"
               value={formData.country}
               onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.country}
             >
-              <option value="" disabled>Select your country</option>
+              <option value="">Select your country (optional)</option>
               <option value="United Kingdom">United Kingdom</option>
               <option value="France">France</option>
               <option value="Germany">Germany</option>
@@ -1008,7 +975,6 @@ function ContactForm() {
               <option value="Other European country">Other European country</option>
               <option value="International">International</option>
             </select>
-            {errors.country && <span className="field-error">{errors.country}</span>}
           </div>
         </div>
       </fieldset>
@@ -1021,39 +987,30 @@ function ContactForm() {
         </legend>
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="service">
-              What service are you interested in? <span className="required-star">*</span>
-            </label>
+            <label htmlFor="service">What service are you interested in?</label>
             <select
               id="service"
               name="service"
               value={formData.service}
               onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.service}
             >
-              <option value="" disabled>Select a service</option>
+              <option value="">Select a service (optional)</option>
               {serviceOptions.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
               <option value="Full support / Multi-service">Full support / Multi-service</option>
               <option value="Other need">Other need</option>
             </select>
-            {errors.service && <span className="field-error">{errors.service}</span>}
           </div>
           <div className="form-field">
-            <label htmlFor="source">
-              How did you hear about us? <span className="required-star">*</span>
-            </label>
+            <label htmlFor="source">How did you hear about us?</label>
             <select
               id="source"
               name="source"
               value={formData.source}
               onChange={handleChange}
-              aria-required="true"
-              aria-invalid={!!errors.source}
             >
-              <option value="" disabled>Select an option</option>
+              <option value="">Select an option (optional)</option>
               <option value="Search Engine (Google...)">Search Engine (Google...)</option>
               <option value="LinkedIn / Social Media">LinkedIn / Social Media</option>
               <option value="Referral / Professional Network">Referral / Professional Network</option>
@@ -1061,13 +1018,10 @@ function ContactForm() {
               <option value="Press or Media">Press or Media</option>
               <option value="Other">Other</option>
             </select>
-            {errors.source && <span className="field-error">{errors.source}</span>}
           </div>
         </div>
         <div className="form-field">
-          <label htmlFor="message">
-            Briefly describe the challenge you want Ringnova to help you with... <span className="required-star">*</span>
-          </label>
+          <label htmlFor="message">Briefly describe the challenge you want Ringnova to help you with...</label>
           <textarea
             id="message"
             name="message"
@@ -1075,10 +1029,7 @@ function ContactForm() {
             placeholder="Tell us about your needs, current communication channels (calls, chat, email), expected volumes, or key goals..."
             value={formData.message}
             onChange={handleChange}
-            aria-required="true"
-            aria-invalid={!!errors.message}
           />
-          {errors.message && <span className="field-error">{errors.message}</span>}
         </div>
       </fieldset>
 
