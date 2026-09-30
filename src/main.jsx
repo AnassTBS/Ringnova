@@ -559,9 +559,10 @@ function Home() {
 
 /* ─── PageHero (inner pages) ─────────────────────────────────────────── */
 
-function PageHero({ eyebrow, title, description, graphic, graphicClass = "", heroClass = "" }) {
+function PageHero({ eyebrow, title, description, graphic, graphicClass = "", heroClass = "", background }) {
   return (
     <HeroEntrance as="section" className={`page-hero${graphic ? " page-hero-graphic" : ""} ${heroClass}`}>
+      {background && <div className="page-hero-bg-layer">{background}</div>}
       <div className="container page-hero-inner">
         <div>
           <p className="eyebrow"><span />{eyebrow}</p>
@@ -1072,6 +1073,45 @@ function ContactForm() {
   );
 }
 
+function ContactHeroVideo() {
+  const videoRef = React.useRef(null);
+  const reducedMotion = useReducedMotion();
+
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (reducedMotion) {
+      video.pause();
+      return;
+    }
+
+    const promise = video.play();
+    if (promise !== undefined) {
+      promise.catch(() => {});
+    }
+  }, [reducedMotion]);
+
+  return (
+    <div className="contact-hero-video-wrap" aria-hidden="true">
+      <video
+        ref={videoRef}
+        className="contact-hero-video"
+        src="/videos/map.mp4"
+        muted
+        playsInline
+        autoPlay={!reducedMotion}
+        loop={false}
+        preload="auto"
+        onEnded={(e) => {
+          e.currentTarget.pause();
+        }}
+      />
+      <div className="contact-hero-scrim" />
+    </div>
+  );
+}
+
 function ContactPage() {
   return (
     <>
@@ -1079,13 +1119,8 @@ function ContactPage() {
         eyebrow="CONTACT"
         title={<>Tell us what's on<br />your <em>mind.</em></>}
         description="Looking for a more thoughtful way to support your customers or grow your outreach? We'd love to hear what you have in mind."
-        graphic={
-          <div className="contact-bubble" aria-hidden="true">
-            <RingnovaStar size={30} className="contact-bubble-star" />
-            <span>LET'S TALK</span>
-            <Icon name="arrowUp" size={17} />
-          </div>
-        }
+        heroClass="contact-page-hero"
+        background={<ContactHeroVideo />}
       />
       <section className="contact-section section-pad">
         <Reveal className="container contact-grid">
