@@ -9,6 +9,28 @@ import { PhoneInputField } from "./PhoneInputField";
 
 const EASE = [0.2, 0.7, 0.2, 1];
 const VP = { once: true, margin: "0px 0px -60px 0px" };
+const ROUTE_METADATA = {
+  "/": {
+    title: "Ringnova — Conversations that move business forward",
+    description: "Flexible, multilingual customer communication for growing European businesses. Meet Ringnova, your responsive call-center partner.",
+  },
+  "/services": {
+    title: "Customer Support & Call Center Services | Ringnova",
+    description: "Explore Ringnova's customer support, inbound and outbound calls, lead generation, appointment setting, and multilingual services.",
+  },
+  "/about": {
+    title: "About Ringnova | A People-First Call Center Partner",
+    description: "Meet Ringnova, a Morocco-based team helping growing businesses across Europe with thoughtful, multilingual customer communication.",
+  },
+  "/contact": {
+    title: "Contact Ringnova | Start a Conversation",
+    description: "Tell Ringnova about your customer communication needs and start a conversation with our Morocco-based, multilingual team.",
+  },
+  "/privacy": {
+    title: "Privacy Information | Ringnova",
+    description: "Read Ringnova's current privacy information and learn what details are shared when preparing a WhatsApp message.",
+  },
+};
 
 function RingnovaStar({ size = 20, className = "", style = {}, color = "currentColor" }) {
   return (
@@ -346,17 +368,12 @@ function ButtonLink({ to, children, variant = "primary" }) {
   );
 }
 
-/* ─── Service card (with per-card staggered reveal) ─── */
+/* ─── Service card ─── */
 
-function ServiceCard({ service, compact = false, index = 0 }) {
-  const reduced = useReducedMotion();
+function ServiceCard({ service, compact = false }) {
   return (
-    <motion.article
+    <article
       className={`service-card${compact ? " service-card-compact" : ""}`}
-      initial={reduced ? false : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={VP}
-      transition={{ duration: 0.45, delay: index * 0.08, ease: EASE }}
     >
       <div className="service-card-top">
         <span className="service-icon"><Icon name={service.icon} /></span>
@@ -365,7 +382,7 @@ function ServiceCard({ service, compact = false, index = 0 }) {
       <h3>{service.title}</h3>
       <p>{service.description}</p>
       {!compact && <ArrowLink to="/services">Explore service</ArrowLink>}
-    </motion.article>
+    </article>
   );
 }
 
@@ -398,8 +415,8 @@ function HeroPhoto() {
 function ServiceGrid({ services: list }) {
   return (
     <div className="service-grid">
-      {list.map((service, idx) => (
-        <ServiceCard key={service.number} service={service} index={idx} />
+      {list.map((service) => (
+        <ServiceCard key={service.number} service={service} />
       ))}
     </div>
   );
@@ -638,7 +655,6 @@ function ServicePage() {
 /* ─── AboutPage ──────────────────────────────────────────────────────── */
 
 function ValuesGrid() {
-  const reduced = useReducedMotion();
   const values = [
     { num: "01", title: "Reliability", body: "Show up with care, follow through, and make dependable communication part of the experience." },
     { num: "02", title: "Responsiveness", body: "Stay attentive to your needs and keep communication open as your business evolves." },
@@ -648,17 +664,11 @@ function ValuesGrid() {
 
   return (
     <div className="values-grid">
-      {values.map((v, idx) => (
-        <motion.article
-          key={v.num}
-          initial={reduced ? false : { opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VP}
-          transition={{ duration: 0.42, delay: idx * 0.08, ease: EASE }}
-        >
+      {values.map((v) => (
+        <article key={v.num}>
           <span>{v.num}</span>
           <div><h3>{v.title}</h3><p>{v.body}</p></div>
-        </motion.article>
+        </article>
       ))}
     </div>
   );
@@ -740,7 +750,7 @@ function ContactForm() {
   });
 
   const [submitted, setSubmitted] = React.useState(false);
-  const [submitting, setSubmitting] = React.useState(false);
+  const [whatsappUrl, setWhatsappUrl] = React.useState("");
   const [errors, setErrors] = React.useState({});
 
   const handleChange = (e) => {
@@ -761,7 +771,7 @@ function ContactForm() {
     if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errs.email = "Please enter a valid work email address.";
     }
-    if (!formData.consent) errs.consent = "Please agree to the processing of personal data to proceed.";
+    if (!formData.consent) errs.consent = "Please agree to share your details with WhatsApp to prepare your message.";
     return errs;
   };
 
@@ -776,11 +786,27 @@ function ContactForm() {
       return;
     }
 
-    setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 550);
+    const messageDetails = [
+      ["First name", formData.firstName],
+      ["Last name", formData.lastName],
+      ["Work email", formData.email],
+      ["Phone", formData.phone],
+      ["Job function", formData.jobFunction],
+      ["Company", formData.company],
+      ["Industry", formData.industry],
+      ["Country", formData.country],
+      ["Service", formData.service],
+      ["How they heard about us", formData.source],
+      ["Message", formData.message],
+    ]
+      .filter(([, value]) => value.trim())
+      .map(([label, value]) => `${label}: ${value.trim()}`)
+      .join("\n");
+    const url = `https://wa.me/212605560310?text=${encodeURIComponent(`Hello Ringnova,\n\n${messageDetails}`)}`;
+
+    setWhatsappUrl(url);
+    setSubmitted(true);
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleReset = () => {
@@ -808,15 +834,18 @@ function ContactForm() {
         <div className="form-success-star">
           <RingnovaStar size={36} />
         </div>
-        <h3>Message sent successfully!</h3>
+        <h3>Your WhatsApp draft is ready</h3>
         <p className="form-success-lead">
-          Thank you, <strong>{formData.firstName}</strong>. Your inquiry for <strong>{formData.company}</strong> regarding <strong>{formData.service}</strong> has been received by the Ringnova team.
+          Thanks, <strong>{formData.firstName}</strong>. Review the details in WhatsApp and tap Send to contact Ringnova. Your message has not been sent yet.
         </p>
         <p className="form-success-sub">
-          We will review your requirements and get back to you within 24–48 business hours at <em>{formData.email}</em> or {formData.phone}.
+          If WhatsApp did not open automatically, use the button below.
         </p>
+        <a className="button button-primary form-reset-btn" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+          Continue to WhatsApp
+        </a>
         <button type="button" className="button button-outline form-reset-btn" onClick={handleReset}>
-          Send another message
+          Edit details
         </button>
       </div>
     );
@@ -1048,7 +1077,7 @@ function ContactForm() {
             aria-invalid={!!errors.consent}
           />
           <span>
-            I agree to the processing of my personal data by Ringnova to respond to my inquiry, in accordance with the{" "}
+            I agree that the details I provided will be shared with WhatsApp to prepare a message to Ringnova. I understand I must review and send it in WhatsApp. See the{" "}
             <Link to="/privacy">Privacy Policy</Link>. <span className="required-star">*</span>
           </span>
         </label>
@@ -1060,13 +1089,12 @@ function ContactForm() {
         <button
           className="button button-primary form-submit-btn"
           type="submit"
-          disabled={submitting}
         >
-          {submitting ? "Sending..." : "SEND MESSAGE"}
+          SEND MESSAGE
           <RingnovaStar size={16} className="btn-star-icon" />
         </button>
         <p className="form-privacy-note">
-          Your details are strictly confidential and will never be shared with third parties.
+          Selecting Send Message opens WhatsApp with the details you provided. You can review the draft before sending it.
         </p>
       </div>
     </form>
@@ -1102,7 +1130,7 @@ function ContactHeroVideo() {
         playsInline
         autoPlay={!reducedMotion}
         loop={false}
-        preload="auto"
+        preload={reducedMotion ? "none" : "auto"}
         onEnded={(e) => {
           e.currentTarget.pause();
         }}
@@ -1205,9 +1233,29 @@ function PrivacyPage() {
         <Reveal className="container privacy-content">
           <span className="placeholder-pill">POLICY PLACEHOLDER</span>
           <h2>Privacy policy to be supplied</h2>
-          <p>This preview does not connect the consultation form to a backend or store submitted details. No analytics or advertising cookies have been added. These statements should be reviewed and replaced with Ringnova's approved privacy information before launch.</p>
+          <p>This page is a placeholder, not a complete privacy policy. When you select Send Message on the contact form, the details you provided are included in a WhatsApp draft addressed to Ringnova. WhatsApp receives those details when the draft opens; you must review and tap Send before Ringnova receives your message. The form does not submit to or store data on a Ringnova backend.</p>
+          <p>The phone field uses your browser's timezone to suggest a default calling code; this lookup runs in your browser and does not send your IP address to a geolocation provider. No analytics or advertising cookies have been added. These details must be reviewed and replaced with Ringnova's approved privacy information before publication.</p>
           <p>The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.</p>
           <ArrowLink to="/contact">Back to contact</ArrowLink>
+        </Reveal>
+      </section>
+    </>
+  );
+}
+
+function NotFoundPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="PAGE NOT FOUND"
+        title={<>This page went<br /><em>off script.</em></>}
+        description="The page may have moved, or the address may be incorrect."
+      />
+      <section className="privacy-section section-pad">
+        <Reveal className="container privacy-content">
+          <h2>Let's get you back on track.</h2>
+          <p>Try the homepage or use the navigation to find what you need.</p>
+          <ButtonLink to="/">Back to home</ButtonLink>
         </Reveal>
       </section>
     </>
@@ -1241,6 +1289,28 @@ function AnimatedRoutes() {
   const location = useLocation();
   const reduced = useReducedMotion();
 
+  React.useEffect(() => {
+    const path = location.pathname.replace(/\/+$/, "") || "/";
+    const metadata = ROUTE_METADATA[path];
+    const description = document.querySelector('meta[name="description"]');
+    let robots = document.querySelector('meta[name="robots"]');
+
+    document.title = metadata?.title || "Page not found | Ringnova";
+    if (description) {
+      description.content = metadata?.description || "The page you're looking for could not be found on Ringnova.";
+    }
+
+    if (!metadata && !robots) {
+      robots = document.createElement("meta");
+      robots.name = "robots";
+      document.head.appendChild(robots);
+    }
+    if (robots) {
+      if (metadata) robots.remove();
+      else robots.content = "noindex, follow";
+    }
+  }, [location.pathname]);
+
   React.useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [location.pathname]);
@@ -1261,7 +1331,7 @@ function AnimatedRoutes() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="*" element={<Home />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
