@@ -4,33 +4,13 @@ import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from "re
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "./styles.css";
 import { PhoneInputField } from "./PhoneInputField";
+import { LANGUAGES, pageMetadata } from "./translations";
+import { LanguageProvider, useI18n } from "./i18n";
 
 /* ─── Animation primitives & Brand Star ───────────────────────────────── */
 
 const EASE = [0.2, 0.7, 0.2, 1];
 const VP = { once: true, margin: "0px 0px -60px 0px" };
-const ROUTE_METADATA = {
-  "/": {
-    title: "Ringnova — Conversations that move business forward",
-    description: "Flexible, multilingual customer communication for growing European businesses. Meet Ringnova, your responsive call-center partner.",
-  },
-  "/services": {
-    title: "Customer Support & Call Center Services | Ringnova",
-    description: "Explore Ringnova's customer support, inbound and outbound calls, lead generation, appointment setting, and multilingual services.",
-  },
-  "/about": {
-    title: "About Ringnova | A People-First Call Center Partner",
-    description: "Meet Ringnova, a Morocco-based team helping growing businesses across Europe with thoughtful, multilingual customer communication.",
-  },
-  "/contact": {
-    title: "Contact Ringnova | Start a Conversation",
-    description: "Tell Ringnova about your customer communication needs and start a conversation with our Morocco-based, multilingual team.",
-  },
-  "/privacy": {
-    title: "Privacy Information | Ringnova",
-    description: "Read Ringnova's current privacy information and learn what details are shared when preparing a WhatsApp message.",
-  },
-};
 
 function RingnovaStar({ size = 20, className = "", style = {}, color = "currentColor" }) {
   return (
@@ -215,11 +195,12 @@ function Icon({ name, size = 22, className = "" }) {
 /* ─── Shared UI ─────────────────────────────────────────────────────────── */
 
 function Brand({ light = false }) {
+  const { t } = useI18n();
   return (
     <SmartNavLink
       to="/"
       className={`brand${light ? " brand-light" : ""}`}
-      aria-label="Ringnova home"
+      aria-label={t("Ringnova home")}
     >
       <span className="brand-mark-wrap">
         <img
@@ -274,6 +255,7 @@ function SmartNavLink({ to, onClick, children, ...rest }) {
 function Header() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const { language, setLanguage, t } = useI18n();
   const closeMenu = () => setMenuOpen(false);
 
   React.useEffect(() => {
@@ -290,7 +272,7 @@ function Header() {
         <button
           className="menu-toggle"
           type="button"
-          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={t(menuOpen ? "Close navigation menu" : "Open navigation menu")}
           aria-expanded={menuOpen}
           aria-controls="primary-navigation"
           onClick={() => setMenuOpen((open) => !open)}
@@ -298,50 +280,143 @@ function Header() {
           <Icon name={menuOpen ? "close" : "menu"} />
         </button>
         <div className="header-actions">
-          <nav className="main-nav" id="primary-navigation" aria-label="Main navigation">
-            <SmartNavLink to="/" onClick={closeMenu}>Home</SmartNavLink>
-            <SmartNavLink to="/services" onClick={closeMenu}>Services</SmartNavLink>
-            <SmartNavLink to="/about" onClick={closeMenu}>About us</SmartNavLink>
-            <SmartNavLink to="/contact" onClick={closeMenu}>Contact</SmartNavLink>
+          <nav className="main-nav" id="primary-navigation" aria-label={t("Main navigation")}>
+            <SmartNavLink to="/" onClick={closeMenu}>{t("Home")}</SmartNavLink>
+            <SmartNavLink to="/services" onClick={closeMenu}>{t("Services")}</SmartNavLink>
+            <SmartNavLink to="/about" onClick={closeMenu}>{t("About us")}</SmartNavLink>
+            <SmartNavLink to="/contact" onClick={closeMenu}>{t("Contact")}</SmartNavLink>
           </nav>
-          <SmartNavLink className="nav-cta" to="/contact" onClick={closeMenu}>
-            Let's talk <Icon name="arrowUp" size={15} />
-          </SmartNavLink>
+          <div className="header-tools">
+            <LanguageSwitcher onSelect={closeMenu} />
+            <SmartNavLink className="nav-cta" to="/contact" onClick={closeMenu}>
+              {t("Let's talk")} <Icon name="arrowUp" size={15} />
+            </SmartNavLink>
+          </div>
         </div>
       </div>
     </header>
   );
 }
 
+function FlagIcon({ code }) {
+  const flagMap = {
+    en: "/images/flag-en.svg",
+    fr: "/images/flag-fr.svg",
+    es: "/images/flag-es.svg",
+    de: "/images/flag-de.svg",
+    ar: "/images/flag-sa.svg",
+  };
+
+  const src = flagMap[code] || "/images/flag-en.svg";
+
+  return <img src={src} alt="" className="language-flag" aria-hidden="true" />;
+}
+
+function LanguageSwitcher({ onSelect }) {
+  const { language, setLanguage, t } = useI18n();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const rootRef = React.useRef(null);
+  const triggerRef = React.useRef(null);
+  const activeIndex = LANGUAGES.findIndex(({ code }) => code === language);
+
+  React.useEffect(() => {
+    if (!isOpen) return undefined;
+    const handlePointerDown = (event) => {
+      if (!rootRef.current?.contains(event.target)) setIsOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        const options = [...(rootRef.current?.querySelectorAll(".language-option") || [])];
+        const focusedIndex = options.indexOf(document.activeElement);
+        const currentIndex = focusedIndex < 0 ? activeIndex : focusedIndex;
+        const next = (currentIndex + (event.key === "ArrowDown" ? 1 : LANGUAGES.length - 1)) % LANGUAGES.length;
+        options[next]?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex, isOpen]);
+
+  return (
+    <div className="language-switcher" ref={rootRef}>
+      <button
+        className="language-switcher-trigger"
+        type="button"
+        ref={triggerRef}
+        aria-label={`${t("Language")}: ${language.toUpperCase()}`}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls="language-switcher-menu"
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <FlagIcon code={language} />
+        <svg className={`language-chevron${isOpen ? " is-open" : ""}`} width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="language-switcher-menu" id="language-switcher-menu" role="menu" aria-label={t("Language")}>
+          {LANGUAGES.map(({ code }) => (
+            <button
+              className={`language-option${code === language ? " is-active" : ""}`}
+              type="button"
+              role="menuitemradio"
+              aria-checked={code === language}
+              key={code}
+              onClick={() => {
+                setLanguage(code);
+                setIsOpen(false);
+                onSelect();
+              }}
+            >
+              <FlagIcon code={code} />
+              <span>{code.toUpperCase()}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Footer() {
+  const { t } = useI18n();
   return (
     <footer className="site-footer">
       <div className="container">
         <div className="footer-main">
           <div className="footer-brand-block">
             <Brand light />
-            <p>Good conversations make<br />business better.</p>
+            <p>{t("Good conversations make")}<br />{t("business better.")}</p>
           </div>
           <div className="footer-nav-group">
-            <p className="footer-label">Explore</p>
-            <Link to="/services">Our services</Link>
-            <Link to="/about">About Ringnova</Link>
-            <Link to="/contact">Get in touch</Link>
+            <p className="footer-label">{t("Explore")}</p>
+            <Link to="/services">{t("Our services")}</Link>
+            <Link to="/about">{t("About Ringnova")}</Link>
+            <Link to="/contact">{t("Get in touch")}</Link>
           </div>
           <div className="footer-nav-group">
-            <p className="footer-label">Let's connect</p>
-            <span>Serving businesses across Europe</span>
-            <span>Team based in Morocco</span>
-            <span>English · Français · العربية</span>
+            <p className="footer-label">{t("Let's connect")}</p>
+            <span>{t("Serving businesses across Europe")}</span>
+            <span>{t("Team based in Morocco")}</span>
+            <span>{t("English · Français · العربية")}</span>
           </div>
-          <a className="footer-top" href="#top" aria-label="Back to top">
+          <a className="footer-top" href="#top" aria-label={t("Back to top")}>
             <Icon name="arrowUp" />
           </a>
         </div>
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Ringnova. All rights reserved.</span>
-          <Link to="/privacy">Privacy policy <span className="placeholder-tag">Placeholder</span></Link>
-          <span>Made for better conversations.</span>
+          <span>© {new Date().getFullYear()} Ringnova. {t("All rights reserved.")}</span>
+          <Link to="/privacy">{t("Privacy policy")} <span className="placeholder-tag">{t("Placeholder")}</span></Link>
+          <span>{t("Made for better conversations.")}</span>
         </div>
       </div>
     </footer>
@@ -371,6 +446,7 @@ function ButtonLink({ to, children, variant = "primary" }) {
 /* ─── Service card ─── */
 
 function ServiceCard({ service, compact = false }) {
+  const { t } = useI18n();
   return (
     <article
       className={`service-card${compact ? " service-card-compact" : ""}`}
@@ -379,9 +455,9 @@ function ServiceCard({ service, compact = false }) {
         <span className="service-icon"><Icon name={service.icon} /></span>
         <span className="service-number">{service.number}</span>
       </div>
-      <h3>{service.title}</h3>
-      <p>{service.description}</p>
-      {!compact && <ArrowLink to="/services">Explore service</ArrowLink>}
+      <h3>{t(service.title)}</h3>
+      <p>{t(service.description)}</p>
+      {!compact && <ArrowLink to="/services">{t("Explore service")}</ArrowLink>}
     </article>
   );
 }
@@ -399,12 +475,13 @@ function HeroStarAura() {
 }
 
 function HeroPhoto() {
+  const { t } = useI18n();
   return (
     <div className="hero-visual">
       <img
         className="hero-image"
         src="/images/home-hero.webp"
-        alt="A customer-support agent wearing a headset at her desk in a bright office"
+        alt={t("A customer-support agent wearing a headset at her desk in a bright office")}
       />
     </div>
   );
@@ -424,9 +501,9 @@ function ServiceGrid({ services: list }) {
 
 function LanguageCards() {
   const cards = [
-    { code: "EN", flag: "/images/flag-en.png", lang: "English", tagline: "Clear, confident conversations" },
-    { code: "FR", flag: "/images/flag-fr.png", lang: "Français", tagline: "Une expérience attentionnée" },
-    { code: "AR", flag: "/images/flag-ar.png", lang: "العربية", tagline: "تواصل إنساني ومميز" },
+    { code: "EN", flag: "/images/flag-en.svg", lang: "English", alt: "English flag", tagline: "Clear, confident conversations" },
+    { code: "FR", flag: "/images/flag-fr.svg", lang: "Français", alt: "French flag", tagline: "Une expérience attentionnée" },
+    { code: "AR", flag: "/images/flag-sa.svg", lang: "العربية", alt: "Saudi Arabia flag", tagline: "تواصل إنساني ومميز" },
   ];
 
   return (
@@ -434,7 +511,7 @@ function LanguageCards() {
       {cards.map((c) => (
         <div key={c.code} className="language-card">
           <span className="language-flag-badge">
-            <img src={c.flag} alt={`${c.lang} flag`} className="language-flag-img" width={48} height={48} />
+            <img src={c.flag} alt={c.alt} className="language-flag-img" width={48} height={48} />
           </span>
           <div className="language-card-info">
             <strong>{c.lang}</strong>
@@ -447,6 +524,7 @@ function LanguageCards() {
 }
 
 function Home() {
+  const { t } = useI18n();
   return (
     <>
       {/* ── Hero ── */}
@@ -454,28 +532,27 @@ function Home() {
         <div className="container hero-grid">
           <div className="hero-copy">
             <HeroStarAura />
-            <Eyebrow>YOUR PEOPLE-FIRST CALL CENTER PARTNER</Eyebrow>
+            <Eyebrow>{t("YOUR PEOPLE-FIRST CALL CENTER PARTNER")}</Eyebrow>
             <h1>
-              Every conversation is a chance to <em>grow.</em>
+              {t("Every conversation is a chance to ")}<em>{t("grow.")}</em>
             </h1>
             <p className="hero-description">
-              Flexible customer communication for ambitious businesses. We help you show up,
-              follow through, and make every conversation count.
+              {t("Flexible customer communication for ambitious businesses. We help you show up, follow through, and make every conversation count.")}
             </p>
             <div className="hero-actions">
-              <ButtonLink to="/contact">Let's talk about your needs</ButtonLink>
-              <ArrowLink to="/services">Explore our services</ArrowLink>
+              <ButtonLink to="/contact">{t("Let's talk about your needs")}</ButtonLink>
+              <ArrowLink to="/services">{t("Explore our services")}</ArrowLink>
             </div>
             <div className="hero-proof">
               <span className="proof-avatars" aria-hidden="true"><i>R</i><i>N</i><i>+</i></span>
-              <span>Thoughtful support.<br /><strong>Tailored to your team.</strong></span>
+              <span>{t("Thoughtful support.")}<br /><strong>{t("Tailored to your team.")}</strong></span>
             </div>
           </div>
           <HeroPhoto />
         </div>
         <div className="container hero-bottom">
-          <span>BUILT FOR YOUR NEXT CHAPTER</span>
-          <div className="industry-list"><span>STARTUPS</span><i /><span>E-COMMERCE</span><i /><span>SAAS</span><i /><span>AGENCIES</span></div>
+          <span>{t("BUILT FOR YOUR NEXT CHAPTER")}</span>
+          <div className="industry-list"><span>{t("STARTUPS")}</span><i /><span>{t("E-COMMERCE")}</span><i /><span>SAAS</span><i /><span>{t("AGENCIES")}</span></div>
         </div>
       </HeroEntrance>
 
@@ -483,16 +560,14 @@ function Home() {
       <section className="intro-section section-pad">
         <Reveal className="container intro-grid">
           <div>
-            <Eyebrow>MORE THAN A VOICE ON THE LINE</Eyebrow>
-            <h2>Make room for the work <em>only you can do.</em></h2>
+            <Eyebrow>{t("MORE THAN A VOICE ON THE LINE")}</Eyebrow>
+            <h2>{t("Make room for the work ")}<em>{t("only you can do.")}</em></h2>
           </div>
           <div className="intro-text">
             <p>
-              Growing a business means showing up for every customer, prospect, and opportunity.
-              Ringnova gives you a responsive team to help make those conversations happen—without
-              losing the personal touch.
+              {t("Growing a business means showing up for every customer, prospect, and opportunity. Ringnova gives you a responsive team to help make those conversations happen—without losing the personal touch.")}
             </p>
-            <ArrowLink to="/about">Get to know Ringnova</ArrowLink>
+            <ArrowLink to="/about">{t("Get to know Ringnova")}</ArrowLink>
           </div>
         </Reveal>
       </section>
@@ -502,12 +577,12 @@ function Home() {
         <Reveal className="container">
           <div className="section-heading">
             <div>
-              <Eyebrow>WHAT WE CAN HELP WITH</Eyebrow>
-              <h2>Good conversations.<br /><em>Better business.</em></h2>
+              <Eyebrow>{t("WHAT WE CAN HELP WITH")}</Eyebrow>
+              <h2>{t("Good conversations.")}<br /><em>{t("Better business.")}</em></h2>
             </div>
             <div className="section-heading-aside">
-              <p>From the first hello to the next appointment, get flexible support built around your priorities.</p>
-              <ArrowLink to="/services">See all services</ArrowLink>
+              <p>{t("From the first hello to the next appointment, get flexible support built around your priorities.")}</p>
+              <ArrowLink to="/services">{t("See all services")}</ArrowLink>
             </div>
           </div>
           <ServiceGrid services={services.slice(0, 4)} />
@@ -521,25 +596,25 @@ function Home() {
             <div className="approach-photo">
               <img
                 src="/images/home-team-portrait.webp"
-                alt="A customer-support professional in a calm, bright workspace"
+                alt={t("A customer-support professional in a calm, bright workspace")}
                 loading="lazy"
               />
-              <div className="photo-label">Made to fit your business</div>
+              <div className="photo-label">{t("Made to fit your business")}</div>
             </div>
-            <div className="floating-language" style={{ position: "absolute", right: 0, bottom: 4 }}>
-              <Icon name="globe" size={19} /><span><strong>3 languages</strong><small>One connected team</small></span>
+            <div className="floating-language">
+              <Icon name="globe" size={19} /><span><strong>{t("3 languages")}</strong><small>{t("One connected team")}</small></span>
             </div>
           </div>
           <div className="approach-copy">
-            <Eyebrow>A FLEXIBLE WAY FORWARD</Eyebrow>
-            <h2>Your business isn't <em>one-size-fits-all.</em></h2>
-            <p>So your customer communication shouldn't be either. We take time to understand how you work and shape a support approach around what your business actually needs.</p>
+            <Eyebrow>{t("A FLEXIBLE WAY FORWARD")}</Eyebrow>
+            <h2>{t("Your business isn't ")}<em>{t("one-size-fits-all.")}</em></h2>
+            <p>{t("So your customer communication shouldn't be either. We take time to understand how you work and shape a support approach around what your business actually needs.")}</p>
             <ul className="check-list">
-              <li><span><Icon name="check" size={15} /></span> Responsive, reliable communication</li>
-              <li><span><Icon name="check" size={15} /></span> English, French, and Arabic support</li>
-              <li><span><Icon name="check" size={15} /></span> Flexible onboarding, tailored to you</li>
+              <li><span><Icon name="check" size={15} /></span> {t("Responsive, reliable communication")}</li>
+              <li><span><Icon name="check" size={15} /></span> {t("English, French, and Arabic support")}</li>
+              <li><span><Icon name="check" size={15} /></span> {t("Flexible onboarding, tailored to you")}</li>
             </ul>
-            <ButtonLink to="/about" variant="outline">How we work</ButtonLink>
+            <ButtonLink to="/about" variant="outline">{t("How we work")}</ButtonLink>
           </div>
         </Reveal>
       </section>
@@ -548,8 +623,8 @@ function Home() {
       <section className="languages-section">
         <Reveal className="container languages-inner">
           <div>
-            <Eyebrow light>CONNECTION HAS NO BORDERS</Eyebrow>
-            <h2>Speak their language.<br /><em>Make it personal.</em></h2>
+            <Eyebrow light>{t("CONNECTION HAS NO BORDERS")}</Eyebrow>
+            <h2>{t("Speak their language.")}<br /><em>{t("Make it personal.")}</em></h2>
           </div>
           <LanguageCards />
         </Reveal>
@@ -560,13 +635,13 @@ function Home() {
         <Reveal className="container closing-panel">
           <div className="closing-decoration"><span /><span /><span /></div>
           <div className="closing-content">
-            <Eyebrow>LET'S START A CONVERSATION</Eyebrow>
-            <h2>Ready for a little more <em>breathing room?</em></h2>
-            <p>Tell us what your customers need. We'll talk through an approach that fits your business.</p>
-            <ButtonLink to="/contact">Book a consultation</ButtonLink>
+            <Eyebrow>{t("LET'S START A CONVERSATION")}</Eyebrow>
+            <h2>{t("Ready for a little more ")}<em>{t("breathing room?")}</em></h2>
+            <p>{t("Tell us what your customers need. We'll talk through an approach that fits your business.")}</p>
+            <ButtonLink to="/contact">{t("Book a consultation")}</ButtonLink>
           </div>
           <div className="closing-aside">
-            <Icon name="chat" size={27} /><span>It starts with<br /><strong>a hello.</strong></span><Icon name="arrowUp" size={19} />
+            <Icon name="chat" size={27} /><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
           </div>
         </Reveal>
       </section>
@@ -599,13 +674,14 @@ function PageHero({ eyebrow, title, description, graphic, graphicClass = "", her
 /* ─── ServicePage ────────────────────────────────────────────────────── */
 
 function ServiceRows({ services: list }) {
+  const { t } = useI18n();
   return (
     <div className="service-list">
       {list.map((service) => (
         <article className="service-row" key={service.number}>
           <span className="service-row-number">{service.number}</span>
           <span className="service-row-icon"><Icon name={service.icon} /></span>
-          <div><h3>{service.title}</h3><p>{service.description}</p></div>
+          <div><h3>{t(service.title)}</h3><p>{t(service.description)}</p></div>
           <Icon name="arrowUp" className="service-row-arrow" />
         </article>
       ))}
@@ -614,37 +690,38 @@ function ServiceRows({ services: list }) {
 }
 
 function ServicePage() {
+  const { t } = useI18n();
   return (
     <>
       <PageHero
-        eyebrow="OUR SERVICES"
-        title={<>The right support.<br /><em>When it matters.</em></>}
-        description="Flexible customer communication for the moments that move your business forward. Start with what you need; we'll shape the rest together."
+        eyebrow={t("OUR SERVICES")}
+        title={<>{t("The right support.")}<br /><em>{t("When it matters.")}</em></>}
+        description={t("Flexible customer communication for the moments that move your business forward. Start with what you need; we'll shape the rest together.")}
         graphicClass="service-photo-wrap"
         heroClass="service-page-hero"
-        graphic={<img className="service-hero-photo" src="/images/services-hero.webp" alt="A support professional speaking with a customer in a bright team workspace" loading="lazy" />}
+        graphic={<img className="service-hero-photo" src="/images/services-hero.webp" alt={t("A support professional speaking with a customer in a bright team workspace")} loading="eager" fetchpriority="high" />}
       />
       <section className="service-detail-section section-pad">
         <Reveal className="container">
           <div className="service-page-intro">
-            <Eyebrow>HOW WE CAN HELP</Eyebrow>
-            <h2>One thoughtful team.<br /><em>More ways to connect.</em></h2>
+            <Eyebrow>{t("HOW WE CAN HELP")}</Eyebrow>
+            <h2>{t("One thoughtful team.")}<br /><em>{t("More ways to connect.")}</em></h2>
           </div>
           <ServiceRows services={services} />
           <div className="service-note">
             <span className="service-note-star"><RingnovaStar size={24} /></span>
-            <p>Not sure what fits? That's what the first conversation is for. We'll listen, learn about your business, and explore what could work.</p>
-            <ButtonLink to="/contact" variant="outline">Let's figure it out</ButtonLink>
+            <p>{t("Not sure what fits? That's what the first conversation is for. We'll listen, learn about your business, and explore what could work.")}</p>
+            <ButtonLink to="/contact" variant="outline">{t("Let's figure it out")}</ButtonLink>
           </div>
         </Reveal>
       </section>
       <section className="service-languages">
         <Reveal className="container service-languages-inner">
           <div>
-            <Eyebrow>YOUR CUSTOMERS, YOUR LANGUAGES</Eyebrow>
-            <h2>Connected across<br /><em>every conversation.</em></h2>
+            <Eyebrow>{t("YOUR CUSTOMERS, YOUR LANGUAGES")}</Eyebrow>
+            <h2>{t("Connected across")}<br /><em>{t("every conversation.")}</em></h2>
           </div>
-          <p>Our Morocco-based team supports European businesses in English, French, and Arabic. We'll discuss your customers, communication needs, and a suitable approach together.</p>
+          <p>{t("Our Morocco-based team supports European businesses in English, French, and Arabic. We'll discuss your customers, communication needs, and a suitable approach together.")}</p>
         </Reveal>
       </section>
       <CTASection />
@@ -655,6 +732,7 @@ function ServicePage() {
 /* ─── AboutPage ──────────────────────────────────────────────────────── */
 
 function ValuesGrid() {
+  const { t } = useI18n();
   const values = [
     { num: "01", title: "Reliability", body: "Show up with care, follow through, and make dependable communication part of the experience." },
     { num: "02", title: "Responsiveness", body: "Stay attentive to your needs and keep communication open as your business evolves." },
@@ -667,7 +745,7 @@ function ValuesGrid() {
       {values.map((v) => (
         <article key={v.num}>
           <span>{v.num}</span>
-          <div><h3>{v.title}</h3><p>{v.body}</p></div>
+          <div><h3>{t(v.title)}</h3><p>{t(v.body)}</p></div>
         </article>
       ))}
     </div>
@@ -675,12 +753,13 @@ function ValuesGrid() {
 }
 
 function AboutPage() {
+  const { t } = useI18n();
   return (
     <>
       <PageHero
-        eyebrow="ABOUT RINGNOVA"
-        title={<>Better business starts<br />with <em>being there.</em></>}
-        description="We believe the conversations around your business deserve the same care and attention you put into building it."
+        eyebrow={t("ABOUT RINGNOVA")}
+        title={<>{t("Better business starts")}<br />{t("with ")}<em>{t("being there.")}</em></>}
+        description={t("We believe the conversations around your business deserve the same care and attention you put into building it.")}
         graphic={
           <div className="about-mark" aria-hidden="true">
             <span />
@@ -693,21 +772,21 @@ function AboutPage() {
       <section className="about-story section-pad">
         <Reveal className="container about-story-grid">
           <div>
-            <Eyebrow>OUR POINT OF VIEW</Eyebrow>
-            <h2>Every interaction is a chance to <em>show you care.</em></h2>
+            <Eyebrow>{t("OUR POINT OF VIEW")}</Eyebrow>
+            <h2>{t("Every interaction is a chance to ")}<em>{t("show you care.")}</em></h2>
           </div>
           <div className="about-story-copy">
-            <p>Ringnova is a Morocco-based team helping growing businesses across Europe stay close to their customers and prospects. We bring a considered, human approach to customer support and business communication.</p>
-            <p>We know no two businesses work the same way. That's why we start by listening—then shape a flexible way of working around your needs, your customers, and the conversations that matter to you.</p>
-            <ArrowLink to="/contact">Start a conversation</ArrowLink>
+            <p>{t("Ringnova is a Morocco-based team helping growing businesses across Europe stay close to their customers and prospects. We bring a considered, human approach to customer support and business communication.")}</p>
+            <p>{t("We know no two businesses work the same way. That's why we start by listening—then shape a flexible way of working around your needs, your customers, and the conversations that matter to you.")}</p>
+            <ArrowLink to="/contact">{t("Start a conversation")}</ArrowLink>
           </div>
         </Reveal>
       </section>
       <section className="values-section">
         <Reveal className="container">
           <div className="values-heading">
-            <Eyebrow>WHAT YOU CAN EXPECT</Eyebrow>
-            <h2>A good partner makes<br /><em>things feel simpler.</em></h2>
+            <Eyebrow>{t("WHAT YOU CAN EXPECT")}</Eyebrow>
+            <h2>{t("A good partner makes")}<br /><em>{t("things feel simpler.")}</em></h2>
           </div>
           <ValuesGrid />
         </Reveal>
@@ -715,14 +794,14 @@ function AboutPage() {
       <section className="about-team-section">
         <Reveal className="container about-team-grid">
           <div className="team-art">
-            <img src="/images/about-team.webp" alt="Three colleagues collaborating in a bright workspace" loading="lazy" />
+            <img src="/images/about-team.webp" alt={t("Three colleagues collaborating in a bright workspace")} loading="lazy" />
           </div>
           <div>
-            <Eyebrow>A TEAM THAT STARTS BY LISTENING</Eyebrow>
-            <h2>Thoughtful people.<br /><em>Work that fits.</em></h2>
-            <p>Based in Morocco and working with businesses across Europe, our team brings a personal, multilingual approach to every partnership. We learn what matters to your business before shaping how we can help.</p>
-            <p>From onboarding onward, we keep communication clear, responsive, and tailored to your needs.</p>
-            <ButtonLink to="/contact" variant="outline">Meet your next partner</ButtonLink>
+            <Eyebrow>{t("A TEAM THAT STARTS BY LISTENING")}</Eyebrow>
+            <h2>{t("Thoughtful people.")}<br /><em>{t("Work that fits.")}</em></h2>
+            <p>{t("Based in Morocco and working with businesses across Europe, our team brings a personal, multilingual approach to every partnership. We learn what matters to your business before shaping how we can help.")}</p>
+            <p>{t("From onboarding onward, we keep communication clear, responsive, and tailored to your needs.")}</p>
+            <ButtonLink to="/contact" variant="outline">{t("Meet your next partner")}</ButtonLink>
           </div>
         </Reveal>
       </section>
@@ -734,6 +813,7 @@ function AboutPage() {
 /* ─── Contact Form (Confirmed Client Structure) ───────────────────────── */
 
 function ContactForm() {
+  const { t } = useI18n();
   const [formData, setFormData] = React.useState({
     firstName: "",
     lastName: "",
@@ -787,22 +867,22 @@ function ContactForm() {
     }
 
     const messageDetails = [
-      ["First name", formData.firstName],
-      ["Last name", formData.lastName],
-      ["Work email", formData.email],
-      ["Phone", formData.phone],
-      ["Job function", formData.jobFunction],
-      ["Company", formData.company],
-      ["Industry", formData.industry],
-      ["Country", formData.country],
-      ["Service", formData.service],
-      ["How they heard about us", formData.source],
-      ["Message", formData.message],
+      ["First name", formData.firstName, false],
+      ["Last name", formData.lastName, false],
+      ["Work email", formData.email, false],
+      ["Phone", formData.phone, false],
+      ["Job function", formData.jobFunction, true],
+      ["Company", formData.company, false],
+      ["Industry", formData.industry, true],
+      ["Country", formData.country, true],
+      ["Service", formData.service, true],
+      ["How they heard about us", formData.source, true],
+      ["Message", formData.message, false],
     ]
       .filter(([, value]) => value.trim())
-      .map(([label, value]) => `${label}: ${value.trim()}`)
+      .map(([label, value, translateValue]) => `${t(label)}: ${translateValue ? t(value.trim()) : value.trim()}`)
       .join("\n");
-    const url = `https://wa.me/212605560310?text=${encodeURIComponent(`Hello Ringnova,\n\n${messageDetails}`)}`;
+    const url = `https://wa.me/212605560310?text=${encodeURIComponent(`${t("Hello Ringnova,")}\n\n${messageDetails}`)}`;
 
     setWhatsappUrl(url);
     setSubmitted(true);
@@ -834,18 +914,18 @@ function ContactForm() {
         <div className="form-success-star">
           <RingnovaStar size={36} />
         </div>
-        <h3>Your WhatsApp draft is ready</h3>
+        <h3>{t("Your WhatsApp draft is ready")}</h3>
         <p className="form-success-lead">
-          Thanks, <strong>{formData.firstName}</strong>. Review the details in WhatsApp and tap Send to contact Ringnova. Your message has not been sent yet.
+          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Review the details in WhatsApp and tap Send to contact Ringnova. Your message has not been sent yet.")}
         </p>
         <p className="form-success-sub">
-          If WhatsApp did not open automatically, use the button below.
+          {t("If WhatsApp did not open automatically, use the button below.")}
         </p>
         <a className="button button-primary form-reset-btn" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Continue to WhatsApp
+          {t("Continue to WhatsApp")}
         </a>
         <button type="button" className="button button-outline form-reset-btn" onClick={handleReset}>
-          Edit details
+          {t("Edit details")}
         </button>
       </div>
     );
@@ -857,64 +937,68 @@ function ContactForm() {
       <fieldset className="form-section-group">
         <legend className="form-section-header">
           <span className="form-section-badge">01</span>
-          <span className="form-section-title">Personal Information</span>
+          <span className="form-section-title">{t("Personal Information")}</span>
         </legend>
         <div className="form-row">
           <div className="form-field">
             <label htmlFor="firstName">
-              First Name <span className="required-star">*</span>
+              {t("First Name")} <span className="required-star">*</span>
             </label>
             <input
               id="firstName"
               name="firstName"
               type="text"
               autoComplete="given-name"
-              placeholder="e.g. Sarah"
+              placeholder={t("e.g. Sarah")}
               value={formData.firstName}
               onChange={handleChange}
               aria-required="true"
               aria-invalid={!!errors.firstName}
+              aria-describedby={errors.firstName ? "firstName-error" : undefined}
             />
-            {errors.firstName && <span className="field-error">{errors.firstName}</span>}
+            {errors.firstName && <span className="field-error" id="firstName-error">{t(errors.firstName)}</span>}
           </div>
           <div className="form-field">
             <label htmlFor="lastName">
-              Last Name <span className="required-star">*</span>
+              {t("Last Name")} <span className="required-star">*</span>
             </label>
             <input
               id="lastName"
               name="lastName"
               type="text"
               autoComplete="family-name"
-              placeholder="e.g. Dubois"
+              placeholder={t("e.g. Dubois")}
               value={formData.lastName}
               onChange={handleChange}
               aria-required="true"
               aria-invalid={!!errors.lastName}
+              aria-describedby={errors.lastName ? "lastName-error" : undefined}
             />
-            {errors.lastName && <span className="field-error">{errors.lastName}</span>}
+            {errors.lastName && <span className="field-error" id="lastName-error">{t(errors.lastName)}</span>}
           </div>
         </div>
         <div className="form-row">
           <div className="form-field">
             <label htmlFor="email">
-              Work Email <span className="required-star">*</span>
+              {t("Work Email")} <span className="required-star">*</span>
             </label>
             <input
               id="email"
               name="email"
               type="email"
+              dir="ltr"
               autoComplete="email"
               placeholder="sarah.dubois@company.com"
               value={formData.email}
               onChange={handleChange}
               aria-required="true"
               aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "email-error" : undefined}
             />
-            {errors.email && <span className="field-error">{errors.email}</span>}
+            {errors.email && <span className="field-error" id="email-error">{t(errors.email)}</span>}
           </div>
           <div className="form-field">
-            <label htmlFor="phone">Phone Number</label>
+            <label htmlFor="phone">{t("Phone Number")}</label>
             <PhoneInputField
               id="phone"
               name="phone"
@@ -930,34 +1014,34 @@ function ContactForm() {
       <fieldset className="form-section-group">
         <legend className="form-section-header">
           <span className="form-section-badge">02</span>
-          <span className="form-section-title">Professional Information</span>
+          <span className="form-section-title">{t("Professional Information")}</span>
         </legend>
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="jobFunction">Job Function</label>
+            <label htmlFor="jobFunction">{t("Job Function")}</label>
             <select
               id="jobFunction"
               name="jobFunction"
               value={formData.jobFunction}
               onChange={handleChange}
             >
-              <option value="">Select your role (optional)</option>
-              <option value="Executive (CEO, Founder, MD)">Executive (CEO, Founder, MD)</option>
-              <option value="Customer Experience & Support Leader">Customer Experience & Support Leader</option>
-              <option value="Sales & Business Development">Sales & Business Development</option>
-              <option value="Operations & Delivery">Operations & Delivery</option>
-              <option value="Marketing & Digital">Marketing & Digital</option>
-              <option value="Other role">Other role</option>
+              <option value="">{t("Select your role (optional)")}</option>
+              <option value="Executive (CEO, Founder, MD)">{t("Executive (CEO, Founder, MD)")}</option>
+              <option value="Customer Experience & Support Leader">{t("Customer Experience & Support Leader")}</option>
+              <option value="Sales & Business Development">{t("Sales & Business Development")}</option>
+              <option value="Operations & Delivery">{t("Operations & Delivery")}</option>
+              <option value="Marketing & Digital">{t("Marketing & Digital")}</option>
+              <option value="Other role">{t("Other role")}</option>
             </select>
           </div>
           <div className="form-field">
-            <label htmlFor="company">Company</label>
+            <label htmlFor="company">{t("Company")}</label>
             <input
               id="company"
               name="company"
               type="text"
               autoComplete="organization"
-              placeholder="Your company name"
+              placeholder={t("Your company name")}
               value={formData.company}
               onChange={handleChange}
             />
@@ -965,45 +1049,45 @@ function ContactForm() {
         </div>
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="industry">Industry</label>
+            <label htmlFor="industry">{t("Industry")}</label>
             <select
               id="industry"
               name="industry"
               value={formData.industry}
               onChange={handleChange}
             >
-              <option value="">Select your industry (optional)</option>
-              <option value="E-commerce & Retail">E-commerce & Retail</option>
-              <option value="Software & SaaS">Software & SaaS</option>
-              <option value="Professional Services & Agencies">Professional Services & Agencies</option>
-              <option value="Banking, Finance & FinTech">Banking, Finance & FinTech</option>
-              <option value="Healthcare & Wellness">Healthcare & Wellness</option>
-              <option value="Logistics & Transportation">Logistics & Transportation</option>
-              <option value="Telecommunications & Media">Telecommunications & Media</option>
-              <option value="Other industry">Other industry</option>
+              <option value="">{t("Select your industry (optional)")}</option>
+              <option value="E-commerce & Retail">{t("E-commerce & Retail")}</option>
+              <option value="Software & SaaS">{t("Software & SaaS")}</option>
+              <option value="Professional Services & Agencies">{t("Professional Services & Agencies")}</option>
+              <option value="Banking, Finance & FinTech">{t("Banking, Finance & FinTech")}</option>
+              <option value="Healthcare & Wellness">{t("Healthcare & Wellness")}</option>
+              <option value="Logistics & Transportation">{t("Logistics & Transportation")}</option>
+              <option value="Telecommunications & Media">{t("Telecommunications & Media")}</option>
+              <option value="Other industry">{t("Other industry")}</option>
             </select>
           </div>
           <div className="form-field">
-            <label htmlFor="country">Country</label>
+            <label htmlFor="country">{t("Country")}</label>
             <select
               id="country"
               name="country"
               value={formData.country}
               onChange={handleChange}
             >
-              <option value="">Select your country (optional)</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="France">France</option>
-              <option value="Germany">Germany</option>
-              <option value="Belgium">Belgium</option>
-              <option value="Switzerland">Switzerland</option>
-              <option value="Netherlands">Netherlands</option>
-              <option value="Spain">Spain</option>
-              <option value="Italy">Italy</option>
-              <option value="Morocco">Morocco</option>
-              <option value="Luxembourg">Luxembourg</option>
-              <option value="Other European country">Other European country</option>
-              <option value="International">International</option>
+              <option value="">{t("Select your country (optional)")}</option>
+              <option value="United Kingdom">{t("United Kingdom")}</option>
+              <option value="France">{t("France")}</option>
+              <option value="Germany">{t("Germany")}</option>
+              <option value="Belgium">{t("Belgium")}</option>
+              <option value="Switzerland">{t("Switzerland")}</option>
+              <option value="Netherlands">{t("Netherlands")}</option>
+              <option value="Spain">{t("Spain")}</option>
+              <option value="Italy">{t("Italy")}</option>
+              <option value="Morocco">{t("Morocco")}</option>
+              <option value="Luxembourg">{t("Luxembourg")}</option>
+              <option value="Other European country">{t("Other European country")}</option>
+              <option value="International">{t("International")}</option>
             </select>
           </div>
         </div>
@@ -1013,50 +1097,50 @@ function ContactForm() {
       <fieldset className="form-section-group">
         <legend className="form-section-header">
           <span className="form-section-badge">03</span>
-          <span className="form-section-title">Your Project</span>
+          <span className="form-section-title">{t("Your Project")}</span>
         </legend>
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="service">What service are you interested in?</label>
+            <label htmlFor="service">{t("What service are you interested in?")}</label>
             <select
               id="service"
               name="service"
               value={formData.service}
               onChange={handleChange}
             >
-              <option value="">Select a service (optional)</option>
+              <option value="">{t("Select a service (optional)")}</option>
               {serviceOptions.map((s) => (
-                <option key={s} value={s}>{s}</option>
+                <option key={s} value={s}>{t(s)}</option>
               ))}
-              <option value="Full support / Multi-service">Full support / Multi-service</option>
-              <option value="Other need">Other need</option>
+              <option value="Full support / Multi-service">{t("Full support / Multi-service")}</option>
+              <option value="Other need">{t("Other need")}</option>
             </select>
           </div>
           <div className="form-field">
-            <label htmlFor="source">How did you hear about us?</label>
+            <label htmlFor="source">{t("How did you hear about us?")}</label>
             <select
               id="source"
               name="source"
               value={formData.source}
               onChange={handleChange}
             >
-              <option value="">Select an option (optional)</option>
-              <option value="Search Engine (Google...)">Search Engine (Google...)</option>
-              <option value="LinkedIn / Social Media">LinkedIn / Social Media</option>
-              <option value="Referral / Professional Network">Referral / Professional Network</option>
-              <option value="Event / Conference">Event / Conference</option>
-              <option value="Press or Media">Press or Media</option>
-              <option value="Other">Other</option>
+              <option value="">{t("Select an option (optional)")}</option>
+              <option value="Search Engine (Google...)">{t("Search Engine (Google...)")}</option>
+              <option value="LinkedIn / Social Media">{t("LinkedIn / Social Media")}</option>
+              <option value="Referral / Professional Network">{t("Referral / Professional Network")}</option>
+              <option value="Event / Conference">{t("Event / Conference")}</option>
+              <option value="Press or Media">{t("Press or Media")}</option>
+              <option value="Other">{t("Other")}</option>
             </select>
           </div>
         </div>
         <div className="form-field">
-          <label htmlFor="message">Briefly describe the challenge you want Ringnova to help you with...</label>
+          <label htmlFor="message">{t("Briefly describe the challenge you want Ringnova to help you with...")}</label>
           <textarea
             id="message"
             name="message"
             rows="5"
-            placeholder="Tell us about your needs, current communication channels (calls, chat, email), expected volumes, or key goals..."
+            placeholder={t("Tell us about your needs, current communication channels (calls, chat, email), expected volumes, or key goals...")}
             value={formData.message}
             onChange={handleChange}
           />
@@ -1075,13 +1159,14 @@ function ContactForm() {
             onChange={handleChange}
             aria-required="true"
             aria-invalid={!!errors.consent}
+            aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <span>
-            I agree that the details I provided will be shared with WhatsApp to prepare a message to Ringnova. I understand I must review and send it in WhatsApp. See the{" "}
-            <Link to="/privacy">Privacy Policy</Link>. <span className="required-star">*</span>
+            {t("I agree that the details I provided will be shared with WhatsApp to prepare a message to Ringnova. I understand I must review and send it in WhatsApp. See the")}{" "}
+            <Link to="/privacy">{t("Privacy Policy")}</Link>. <span className="required-star">*</span>
           </span>
         </label>
-        {errors.consent && <span className="field-error">{errors.consent}</span>}
+        {errors.consent && <span className="field-error" id="consent-error">{t(errors.consent)}</span>}
       </div>
 
       {/* ── CTA Submit Button ── */}
@@ -1090,11 +1175,11 @@ function ContactForm() {
           className="button button-primary form-submit-btn"
           type="submit"
         >
-          SEND MESSAGE
+          {t("SEND MESSAGE")}
           <RingnovaStar size={16} className="btn-star-icon" />
         </button>
         <p className="form-privacy-note">
-          Selecting Send Message opens WhatsApp with the details you provided. You can review the draft before sending it.
+          {t("Selecting Send Message opens WhatsApp with the details you provided. You can review the draft before sending it.")}
         </p>
       </div>
     </form>
@@ -1126,6 +1211,7 @@ function ContactHeroVideo() {
         ref={videoRef}
         className="contact-hero-video"
         src="/videos/map.mp4"
+        poster="/images/contact-map-poster.webp"
         muted
         playsInline
         autoPlay={!reducedMotion}
@@ -1141,12 +1227,13 @@ function ContactHeroVideo() {
 }
 
 function ContactPage() {
+  const { t } = useI18n();
   return (
     <>
       <PageHero
-        eyebrow="CONTACT"
-        title={<>Tell us what's on<br />your <em>mind.</em></>}
-        description="Looking for a more thoughtful way to support your customers or grow your outreach? We'd love to hear what you have in mind."
+        eyebrow={t("CONTACT")}
+        title={<>{t("contactHeroFirst")}<br /><em>{t("contactHeroEmphasis")}</em></>}
+        description={t("Looking for a more thoughtful way to support your customers or grow your outreach? We'd love to hear what you have in mind.")}
         heroClass="contact-page-hero"
         background={<ContactHeroVideo />}
       />
@@ -1154,53 +1241,53 @@ function ContactPage() {
         <Reveal className="container contact-grid">
           <div className="contact-aside">
             <div className="contact-aside-copy">
-              <Eyebrow>START WITH A HELLO</Eyebrow>
-              <h2>A good fit starts with a <em>good conversation.</em></h2>
-              <p>Share a little about your business and what you're looking for. We'll use it to understand what matters to you and explore next steps together.</p>
-              <span className="contact-aside-foot">No pressure. Just a conversation.</span>
+              <Eyebrow>{t("START WITH A HELLO")}</Eyebrow>
+              <h2>{t("A good fit starts with a ")}<em>{t("good conversation.")}</em></h2>
+              <p>{t("Share a little about your business and what you're looking for. We'll use it to understand what matters to you and explore next steps together.")}</p>
+              <span className="contact-aside-foot">{t("No pressure. Just a conversation.")}</span>
             </div>
             <div className="contact-aside-right">
               <div className="contact-facts">
                 <div className="contact-lang-panel contact-fact-card">
                   <div className="contact-lang-flags">
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/flag-ma.png" alt="Morocco flag" className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/morocco.jpg" alt={t("Morocco flag")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/flag-eu.png" alt="European Union flag" className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/flag-eu.svg" alt={t("European Union flag")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                   </div>
                   <div className="contact-lang-info">
-                    <strong>Based in Morocco</strong>
-                    <small>Working with businesses across Europe</small>
+                    <strong>{t("Based in Morocco")}</strong>
+                    <small>{t("Working with businesses across Europe")}</small>
                   </div>
                 </div>
                 <div className="contact-lang-panel contact-fact-card">
                   <div className="contact-lang-flags">
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/icon-listen.png" alt="Here to listen" className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/icon-listen.png" alt={t("Here to listen")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                   </div>
                   <div className="contact-lang-info">
-                    <strong>Here to listen</strong>
-                    <small>Onboarding shaped around your needs</small>
+                    <strong>{t("Here to listen")}</strong>
+                    <small>{t("Onboarding shaped around your needs")}</small>
                   </div>
                 </div>
                 <div className="contact-lang-panel contact-fact-card">
                   <div className="contact-lang-flags">
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/flag-en.png" alt="English flag" className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/flag-en.svg" alt={t("English flag")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/flag-fr.png" alt="French flag" className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/flag-fr.svg" alt={t("French flag")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/flag-ar.png" alt="Arabic flag" className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/flag-sa.svg" alt={t("Saudi Arabia flag")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                   </div>
                   <div className="contact-lang-info">
-                    <strong>Speak your language</strong>
-                    <small>English, French, and Arabic support</small>
+                    <strong>{t("Speak your language")}</strong>
+                    <small>{t("English, French, and Arabic support")}</small>
                   </div>
                 </div>
               </div>
@@ -1208,8 +1295,8 @@ function ContactPage() {
           </div>
           <div className="contact-form-wrap">
             <div className="form-heading">
-              <span><RingnovaStar size={13} className="form-heading-star" /> GET IN TOUCH</span>
-              <strong>Tell us about your needs</strong>
+              <span><RingnovaStar size={13} className="form-heading-star" /> {t("GET IN TOUCH")}</span>
+              <strong>{t("Tell us about your needs")}</strong>
             </div>
             <ContactForm />
           </div>
@@ -1222,21 +1309,22 @@ function ContactPage() {
 /* ─── Privacy ────────────────────────────────────────────────────────── */
 
 function PrivacyPage() {
+  const { t } = useI18n();
   return (
     <>
       <PageHero
-        eyebrow="PRIVACY"
-        title={<>Privacy, with<br /><em>care.</em></>}
-        description="This page is a placeholder and is not a complete privacy policy. Approved legal text must be added before the site is published."
+        eyebrow={t("PRIVACY")}
+        title={<>{t("privacyTitleFirst")}<br /><em>{t("privacyTitleEmphasis")}</em></>}
+        description={t("This page is a placeholder and is not a complete privacy policy. Approved legal text must be added before the site is published.")}
       />
       <section className="privacy-section section-pad">
         <Reveal className="container privacy-content">
-          <span className="placeholder-pill">POLICY PLACEHOLDER</span>
-          <h2>Privacy policy to be supplied</h2>
-          <p>This page is a placeholder, not a complete privacy policy. When you select Send Message on the contact form, the details you provided are included in a WhatsApp draft addressed to Ringnova. WhatsApp receives those details when the draft opens; you must review and tap Send before Ringnova receives your message. The form does not submit to or store data on a Ringnova backend.</p>
-          <p>The phone field uses your browser's timezone to suggest a default calling code; this lookup runs in your browser and does not send your IP address to a geolocation provider. No analytics or advertising cookies have been added. These details must be reviewed and replaced with Ringnova's approved privacy information before publication.</p>
-          <p>The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.</p>
-          <ArrowLink to="/contact">Back to contact</ArrowLink>
+          <span className="placeholder-pill">{t("POLICY PLACEHOLDER")}</span>
+          <h2>{t("Privacy policy to be supplied")}</h2>
+          <p>{t("This page is a placeholder, not a complete privacy policy. When you select Send Message on the contact form, the details you provided are included in a WhatsApp draft addressed to Ringnova. WhatsApp receives those details when the draft opens; you must review and tap Send before Ringnova receives your message. The form does not submit to or store data on a Ringnova backend.")}</p>
+          <p>{t("The phone field uses your browser's timezone to suggest a default calling code; this lookup runs in your browser and does not send your IP address to a geolocation provider. No analytics or advertising cookies have been added. These details must be reviewed and replaced with Ringnova's approved privacy information before publication.")}</p>
+          <p>{t("The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.")}</p>
+          <ArrowLink to="/contact">{t("Back to contact")}</ArrowLink>
         </Reveal>
       </section>
     </>
@@ -1244,18 +1332,19 @@ function PrivacyPage() {
 }
 
 function NotFoundPage() {
+  const { t } = useI18n();
   return (
     <>
       <PageHero
-        eyebrow="PAGE NOT FOUND"
-        title={<>This page went<br /><em>off script.</em></>}
-        description="The page may have moved, or the address may be incorrect."
+        eyebrow={t("PAGE NOT FOUND")}
+        title={<>{t("This page went")}<br /><em>{t("off script.")}</em></>}
+        description={t("The page may have moved, or the address may be incorrect.")}
       />
       <section className="privacy-section section-pad">
         <Reveal className="container privacy-content">
-          <h2>Let's get you back on track.</h2>
-          <p>Try the homepage or use the navigation to find what you need.</p>
-          <ButtonLink to="/">Back to home</ButtonLink>
+          <h2>{t("Let's get you back on track.")}</h2>
+          <p>{t("Try the homepage or use the navigation to find what you need.")}</p>
+          <ButtonLink to="/">{t("Back to home")}</ButtonLink>
         </Reveal>
       </section>
     </>
@@ -1265,18 +1354,19 @@ function NotFoundPage() {
 /* ─── CTA Section ────────────────────────────────────────────────────── */
 
 function CTASection() {
+  const { t } = useI18n();
   return (
     <section className="closing-section section-pad">
       <Reveal className="container closing-panel">
         <div className="closing-decoration"><span /><span /><span /></div>
         <div className="closing-content">
-          <Eyebrow>LET'S START A CONVERSATION</Eyebrow>
-          <h2>Let's find an approach that <em>fits.</em></h2>
-          <p>Tell us what your business needs. We'll take it from there, together.</p>
-          <ButtonLink to="/contact">Talk to Ringnova</ButtonLink>
+          <Eyebrow>{t("LET'S START A CONVERSATION")}</Eyebrow>
+          <h2>{t("Let's find an approach that ")}<em>{t("fits.")}</em></h2>
+          <p>{t("Tell us what your business needs. We'll take it from there, together.")}</p>
+          <ButtonLink to="/contact">{t("Talk to Ringnova")}</ButtonLink>
         </div>
         <div className="closing-aside">
-          <Icon name="chat" size={27} /><span>It starts with<br /><strong>a hello.</strong></span><Icon name="arrowUp" size={19} />
+          <Icon name="chat" size={27} /><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
         </div>
       </Reveal>
     </section>
@@ -1288,16 +1378,17 @@ function CTASection() {
 function AnimatedRoutes() {
   const location = useLocation();
   const reduced = useReducedMotion();
+  const { language, t } = useI18n();
 
   React.useEffect(() => {
     const path = location.pathname.replace(/\/+$/, "") || "/";
-    const metadata = ROUTE_METADATA[path];
+    const metadata = pageMetadata[language]?.[path] || pageMetadata.en[path];
     const description = document.querySelector('meta[name="description"]');
     let robots = document.querySelector('meta[name="robots"]');
 
-    document.title = metadata?.title || "Page not found | Ringnova";
+    document.title = metadata?.[0] || t("PAGE NOT FOUND") + " | Ringnova";
     if (description) {
-      description.content = metadata?.description || "The page you're looking for could not be found on Ringnova.";
+      description.content = metadata?.[1] || t("The page may have moved, or the address may be incorrect.");
     }
 
     if (!metadata && !robots) {
@@ -1309,7 +1400,7 @@ function AnimatedRoutes() {
       if (metadata) robots.remove();
       else robots.content = "noindex, follow";
     }
-  }, [location.pathname]);
+  }, [location.pathname, language, t]);
 
   React.useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -1339,9 +1430,10 @@ function AnimatedRoutes() {
 }
 
 function Layout() {
+  const { t } = useI18n();
   return (
     <>
-      <a className="skip-link" href="#main">Skip to content</a>
+      <a className="skip-link" href="#main">{t("Skip to content")}</a>
       <div id="top" />
       <Header />
       <main id="main">
@@ -1354,9 +1446,11 @@ function Layout() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Layout />
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
+    </LanguageProvider>
   );
 }
 

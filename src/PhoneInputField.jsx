@@ -5,6 +5,7 @@ import {
   parseCountry,
   FlagImage,
 } from "react-international-phone";
+import { useI18n } from "./i18n";
 
 /**
  * PhoneInputField
@@ -23,6 +24,7 @@ export function PhoneInputField({
   name = "phone",
   placeholder = "1 23 45 67 89",
 }) {
+  const { language, t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -78,20 +80,38 @@ export function PhoneInputField({
   }, [isOpen]);
 
   // Filter countries by search query
+  const regionNames = useMemo(() => {
+    try {
+      return new Intl.DisplayNames([language], { type: "region" });
+    } catch {
+      return null;
+    }
+  }, [language]);
+
+  const countryName = (parsed) => {
+    try {
+      return regionNames?.of(parsed.iso2.toUpperCase()) || parsed.name;
+    } catch {
+      return parsed.name;
+    }
+  };
+
   const filteredCountries = useMemo(() => {
     if (!searchQuery.trim()) return defaultCountries;
     const q = searchQuery.toLowerCase().trim();
     return defaultCountries.filter((c) => {
       const parsed = parseCountry(c);
       return (
+        countryName(parsed).toLowerCase().includes(q) ||
         parsed.name.toLowerCase().includes(q) ||
         parsed.dialCode.includes(q.replace("+", "")) ||
         parsed.iso2.toLowerCase().includes(q)
       );
     });
-  }, [searchQuery]);
+  }, [searchQuery, language]);
 
   const currentCountry = country?.name ? country : (country ? parseCountry(country) : null);
+  const currentCountryName = currentCountry ? countryName(currentCountry) : "";
 
   const selectCountry = (iso2) => {
     setCountry(iso2);
@@ -154,7 +174,8 @@ export function PhoneInputField({
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-controls={`${id}-country-list`}
-          title={currentCountry ? currentCountry.name : "Select country"}
+          aria-label={`${t("Select country or calling code")}${currentCountry ? ` (${t("currently")} ${currentCountryName})` : ""}`}
+          title={currentCountryName || t("Select country or calling code")}
         >
           {currentCountry && (
             <span className="phone-flag-icon">
@@ -183,12 +204,12 @@ export function PhoneInputField({
           id={id}
           name={name}
           type="tel"
+          dir="ltr"
           disabled={disabled}
           placeholder={placeholder}
           value={inputValue}
           onChange={handlePhoneValueChange}
           className="phone-number-input"
-          aria-required="true"
           aria-invalid={!!error}
         />
       </div>
@@ -221,10 +242,10 @@ export function PhoneInputField({
                 setActiveIndex(0);
               }}
               onKeyDown={handleSearchKeyDown}
-              placeholder="Search country or code..."
+              placeholder={t("Search country or code...")}
               className="phone-search-input"
               role="combobox"
-              aria-label="Search countries by name or calling code"
+              aria-label={t("Search countries by name or calling code")}
               aria-autocomplete="list"
               aria-expanded="true"
               aria-controls={`${id}-country-list`}
@@ -236,9 +257,9 @@ export function PhoneInputField({
             />
           </div>
 
-          <ul className="phone-dropdown-list" id={`${id}-country-list`} role="listbox" aria-label="Countries">
+          <ul className="phone-dropdown-list" id={`${id}-country-list`} role="listbox" aria-label={t("Countries")}>
             {filteredCountries.length === 0 ? (
-              <li className="phone-no-results">No countries found</li>
+              <li className="phone-no-results">{t("No countries found")}</li>
             ) : (
               filteredCountries.map((c) => {
                 const parsed = parseCountry(c);
@@ -256,7 +277,7 @@ export function PhoneInputField({
                     <span className="phone-country-flag">
                       <FlagImage iso2={parsed.iso2} size="18px" />
                     </span>
-                    <span className="phone-country-name">{parsed.name}</span>
+                    <span className="phone-country-name">{countryName(parsed)}</span>
                     <span className="phone-country-code">+{parsed.dialCode}</span>
                   </li>
                 );
