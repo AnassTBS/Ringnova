@@ -157,6 +157,18 @@ function Icon({ name, size = 22, className = "" }) {
         <path d="M8 11h.01M12 11h.01M16 11h.01" />
       </>
     ),
+    mail: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m4 7 8 6 8-6" />
+      </>
+    ),
+    whatsapp: (
+      <>
+        <path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z" />
+        <path d="M8.5 8.1c.3-.4.6-.4.9-.4h.4c.2 0 .4.1.5.4l.7 1.7c.1.2.1.4-.1.6l-.6.7c-.2.2-.2.4 0 .6.4.7 1.1 1.4 1.8 1.8.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.2.1.3.3.3.5 0 .3-.1 1.1-.6 1.5-.5.5-1.2.7-2 .5-1-.2-2.2-.8-3.4-1.9-1.2-1.1-2-2.4-2.2-3.4-.2-.8.1-1.5.7-2Z" />
+      </>
+    ),
     phone: (
       <path d="M7 3H5a2 2 0 0 0-2 2c.8 8.3 7.7 15.2 16 16a2 2 0 0 0 2-2v-2l-4.3-2-2.2 2.2a14 14 0 0 1-6.7-6.7L10 8.3 8 4Z" />
     ),
@@ -193,6 +205,21 @@ function Icon({ name, size = 22, className = "" }) {
   return <svg {...common}>{paths[name]}</svg>;
 }
 
+function WhatsAppLogo({ size = 21 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.999-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.437-9.884 9.888-9.884 2.64.001 5.12 1.03 6.988 2.899a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.438 9.883-9.886 9.883m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 0 5.495 0 12.05a11.98 11.98 0 0 0 1.634 6.034L.001 24l6.056-1.589a12.05 12.05 0 0 0 5.99 1.526h.005c6.554 0 12.05-5.495 12.05-12.05a11.98 11.98 0 0 0-3.638-8.399Z" />
+    </svg>
+  );
+}
+
 /* ─── Shared UI ─────────────────────────────────────────────────────────── */
 
 function Brand({ light = false }) {
@@ -206,14 +233,14 @@ function Brand({ light = false }) {
       <span className="brand-mark-wrap">
         <img
           className="brand-mark"
-          src={light ? "/ringnova-mark-light.png" : "/ringnova-mark.png"}
+          src={light ? "/ringnova-mark-light.webp" : "/ringnova-mark.webp"}
           alt=""
         />
         <RingnovaStar size={12} className="brand-star-flare" />
       </span>
       <img
         className="brand-wordmark"
-        src={light ? "/ringnova-wordmark-light.png" : "/ringnova-wordmark.png"}
+        src={light ? "/ringnova-wordmark-light.webp" : "/ringnova-wordmark.webp"}
         alt=""
       />
     </SmartNavLink>
@@ -232,9 +259,13 @@ function ArrowLink({ to, children, light = false, className = "" }) {
 /* SmartNavLink — navigates normally to other pages;
    when already on the target page, smoothly scrolls to top instead.
    Accepts all standard Link props (className, aria-label, etc). */
-function SmartNavLink({ to, onClick, children, ...rest }) {
+function SmartNavLink({ to, onClick, children, className = "", ...rest }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const isMainNavLink = className.split(" ").includes("main-nav-link");
+  const isActive = to === "/"
+    ? location.pathname === "/"
+    : location.pathname === to || (to === "/careers" && location.pathname.startsWith("/careers/"));
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -247,7 +278,13 @@ function SmartNavLink({ to, onClick, children, ...rest }) {
   };
 
   return (
-    <Link to={to} onClick={handleClick} {...rest}>
+    <Link
+      to={to}
+      onClick={handleClick}
+      className={`${className}${isMainNavLink && isActive ? " is-active" : ""}`}
+      aria-current={isMainNavLink && isActive ? "page" : undefined}
+      {...rest}
+    >
       {children}
     </Link>
   );
@@ -282,11 +319,11 @@ function Header() {
         </button>
         <div className="header-actions">
           <nav className="main-nav" id="primary-navigation" aria-label={t("Main navigation")}>
-            <SmartNavLink to="/" onClick={closeMenu}>{t("Home")}</SmartNavLink>
-            <SmartNavLink to="/services" onClick={closeMenu}>{t("Services")}</SmartNavLink>
-            <SmartNavLink to="/about" onClick={closeMenu}>{t("About us")}</SmartNavLink>
-            <SmartNavLink to="/careers" onClick={closeMenu}>{t("Careers")}</SmartNavLink>
-            <SmartNavLink to="/contact" onClick={closeMenu}>{t("Contact")}</SmartNavLink>
+            <SmartNavLink className="main-nav-link" to="/" onClick={closeMenu}>{t("Home")}</SmartNavLink>
+            <SmartNavLink className="main-nav-link" to="/services" onClick={closeMenu}>{t("Services")}</SmartNavLink>
+            <SmartNavLink className="main-nav-link" to="/about" onClick={closeMenu}>{t("About us")}</SmartNavLink>
+            <SmartNavLink className="main-nav-link" to="/careers" onClick={closeMenu}>{t("Careers")}</SmartNavLink>
+            <SmartNavLink className="main-nav-link" to="/contact" onClick={closeMenu}>{t("Contact")}</SmartNavLink>
           </nav>
           <div className="header-tools">
             <LanguageSwitcher onSelect={closeMenu} />
@@ -494,7 +531,7 @@ function HeroPhoto() {
     <div className="hero-visual">
       <img
         className="hero-image"
-        src="/images/home-hero.png"
+        src="/images/home-hero.webp"
         alt={t("A smiling customer-support professional wearing a headset")}
       />
     </div>
@@ -713,7 +750,7 @@ function ServicePage() {
         description={t("Flexible customer communication for the moments that move your business forward. Start with what you need; we'll shape the rest together.")}
         graphicClass="service-photo-wrap"
         heroClass="service-page-hero"
-        graphic={<img className="service-hero-photo" src="/images/services-hero.jpg" alt={t("Customer support colleagues wearing headsets at work")} loading="eager" fetchpriority="high" />}
+        graphic={<img className="service-hero-photo" src="/images/services-hero.webp" alt={t("Customer support colleagues wearing headsets at work")} loading="eager" fetchpriority="high" />}
       />
       <section className="service-detail-section section-pad">
         <Reveal className="container">
@@ -838,7 +875,7 @@ function ContactForm() {
   });
 
   const [submitted, setSubmitted] = React.useState(false);
-  const [whatsappUrl, setWhatsappUrl] = React.useState("");
+  const [emailUrl, setEmailUrl] = React.useState("");
   const [errors, setErrors] = React.useState({});
 
   const handleChange = (e) => {
@@ -859,7 +896,7 @@ function ContactForm() {
     if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errs.email = "Please enter a valid work email address.";
     }
-    if (!formData.consent) errs.consent = "Please agree to share your details with WhatsApp to prepare your message.";
+    if (!formData.consent) errs.consent = "Please agree to prepare an email with your details for Ringnova.";
     return errs;
   };
 
@@ -890,9 +927,9 @@ function ContactForm() {
       .filter(([, value]) => value.trim())
       .map(([label, value, translateValue]) => `${t(label)}: ${translateValue ? t(value.trim()) : value.trim()}`)
       .join("\n");
-    const url = `https://wa.me/212605560310?text=${encodeURIComponent(`${t("Hello Ringnova,")}\n\n${messageDetails}`)}`;
+    const url = `mailto:ringnovasales@gmail.com?subject=${encodeURIComponent("New website inquiry — Ringnova")}&body=${encodeURIComponent(`${t("Hello Ringnova,")}\n\n${messageDetails}`)}`;
 
-    setWhatsappUrl(url);
+    setEmailUrl(url);
     setSubmitted(true);
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -922,15 +959,15 @@ function ContactForm() {
         <div className="form-success-star">
           <RingnovaStar size={36} />
         </div>
-        <h3>{t("Your WhatsApp draft is ready")}</h3>
+        <h3>{t("Your email draft is ready")}</h3>
         <p className="form-success-lead">
-          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Review the details in WhatsApp and tap Send to contact Ringnova. Your message has not been sent yet.")}
+          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Review the details in your email app and click Send to contact Ringnova. Your message has not been sent yet.")}
         </p>
         <p className="form-success-sub">
-          {t("If WhatsApp did not open automatically, use the button below.")}
+          {t("If your email app did not open automatically, use the button below.")}
         </p>
-        <a className="button button-primary form-reset-btn" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          {t("Continue to WhatsApp")}
+        <a className="button button-primary form-reset-btn" href={emailUrl} target="_blank" rel="noopener noreferrer">
+          {t("Continue to email")}
         </a>
         <button type="button" className="button button-outline form-reset-btn" onClick={handleReset}>
           {t("Edit details")}
@@ -1170,7 +1207,7 @@ function ContactForm() {
             aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <span>
-            {t("I agree that the details I provided will be shared with WhatsApp to prepare a message to Ringnova. I understand I must review and send it in WhatsApp. See the")}{" "}
+            {t("I agree that the details I provided will be included in an email draft addressed to ringnovasales@gmail.com. I understand I must review and send it in my email app. See the")}{" "}
             <Link to="/privacy">{t("Privacy Policy")}</Link>. <span className="required-star">*</span>
           </span>
         </label>
@@ -1183,11 +1220,11 @@ function ContactForm() {
           className="button button-primary form-submit-btn"
           type="submit"
         >
-          {t("SEND MESSAGE")}
+          {t("SEND EMAIL")}
           <RingnovaStar size={16} className="btn-star-icon" />
         </button>
         <p className="form-privacy-note">
-          {t("Selecting Send Message opens WhatsApp with the details you provided. You can review the draft before sending it.")}
+          {t("Selecting Send Email opens an email draft addressed to ringnovasales@gmail.com with the details you provided. Review and send it from your email app.")}
         </p>
       </div>
     </form>
@@ -1259,7 +1296,7 @@ function ContactPage() {
                 <div className="contact-lang-panel contact-fact-card">
                   <div className="contact-lang-flags">
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/morocco.jpg" alt={t("Morocco flag")} className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/morocco.webp" alt={t("Morocco flag")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                     <span className="contact-lang-flag-wrap">
                       <img src="/images/flag-eu.svg" alt={t("European Union flag")} className="contact-lang-flag-img" width={44} height={44} />
@@ -1273,7 +1310,7 @@ function ContactPage() {
                 <div className="contact-lang-panel contact-fact-card">
                   <div className="contact-lang-flags">
                     <span className="contact-lang-flag-wrap">
-                      <img src="/images/icon-listen.png" alt={t("Here to listen")} className="contact-lang-flag-img" width={44} height={44} />
+                      <img src="/images/icon-listen.webp" alt={t("Here to listen")} className="contact-lang-flag-img" width={44} height={44} />
                     </span>
                   </div>
                   <div className="contact-lang-info">
@@ -1323,16 +1360,67 @@ function PrivacyPage() {
       <PageHero
         eyebrow={t("PRIVACY")}
         title={<>{t("privacyTitleFirst")}<br /><em>{t("privacyTitleEmphasis")}</em></>}
-        description={t("This page is a placeholder and is not a complete privacy policy. Approved legal text must be added before the site is published.")}
+        description={t("This draft describes data practices visible in the current website. Ringnova must confirm the marked business details and obtain appropriate review before publication.")}
         graphic={<BrandOrbit />}
       />
       <section className="privacy-section section-pad">
         <Reveal className="container privacy-content">
-          <span className="placeholder-pill">{t("POLICY PLACEHOLDER")}</span>
-          <h2>{t("Privacy policy to be supplied")}</h2>
-          <p>{t("This page is a placeholder, not a complete privacy policy. When you select Send Message on the contact form, the details you provided are included in a WhatsApp draft addressed to Ringnova. WhatsApp receives those details when the draft opens; you must review and tap Send before Ringnova receives your message. The form does not submit to or store data on a Ringnova backend.")}</p>
-          <p>{t("The phone field uses your browser's timezone to suggest a default calling code; this lookup runs in your browser and does not send your IP address to a geolocation provider. No analytics or advertising cookies have been added. These details must be reviewed and replaced with Ringnova's approved privacy information before publication.")}</p>
-          <p>{t("The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.")}</p>
+          <span className="privacy-draft-label">{t("DRAFT — DETAILS REQUIRE CONFIRMATION")}</span>
+          <h2>{t("Privacy notice for the Ringnova website")}</h2>
+          <p>{t("This draft reflects the website's current technical behavior, not a complete legal assessment. Items that depend on Ringnova's business arrangements are identified below and must be confirmed before this notice is published.")}</p>
+
+          <div className="privacy-draft-checklist">
+            <h3>{t("Ringnova: confirm before publication")}</h3>
+            <ul>
+              <li>{t("Full legal name of the organization responsible for this website")}</li>
+              <li>{t("Registered address and country of establishment")}</li>
+              <li>{t("A monitored privacy contact address and, if applicable, data-protection contact")}</li>
+              <li>{t("Applicable purposes and legal basis for handling enquiries and recruitment emails")}</li>
+              <li>{t("Retention and deletion periods for emails and candidate documents")}</li>
+              <li>{t("Hosting, email, and other service providers, including processing locations and any international transfers")}</li>
+            </ul>
+          </div>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Who is responsible")}</h3>
+            <p>{t("The website is presented as Ringnova. The legal entity that operates it, its registered address, and its country of establishment have not been verified for this draft. Insert those details and a privacy contact confirmed by Ringnova before publication; the sales and recruitment inboxes are not assumed to be privacy contacts.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Information and contact enquiries")}</h3>
+            <p>{t("The Contact form can include your name, work email, optional phone number, company and professional details, country, service interests, referral source, message, and consent choice. The form prepares a message addressed to ringnovasales@gmail.com in your selected email application. The website does not submit this form to a Ringnova server. Ringnova receives the information only if you choose to send the email.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Recruitment and WhatsApp")}</h3>
+            <p>{t("The Careers page provides an email link to ringnovarecruitment@gmail.com. If you use it, you choose what information and attachments, such as a CV or motivation letter, to send. The website does not upload or receive those files. WhatsApp links open a conversation with Ringnova in WhatsApp; information you choose to share there is handled by WhatsApp and the participants under their applicable terms and privacy information.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Information stored in your browser")}</h3>
+            <p>{t("The site stores your language preference in your browser's local storage. The Contact form's entries are held in page memory while you use the form and are not saved by the site to a Ringnova account or database. The phone field uses your browser's time-zone setting to suggest a country calling code; this suggestion is calculated locally.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Cookies and third-party services")}</h3>
+            <p>{t("No analytics or advertising cookies or tracking tools were found in the current website code. The site requests font files from Google Fonts and a country-flag image from the Twemoji CDN hosted by cdnjs. Those providers receive browser requests and may process technical information such as your IP address. Ringnova must confirm the current providers, their terms, and any associated transfers before publication.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Purposes, legal basis, and retention")}</h3>
+            <p>{t("The email links are provided so you can contact Ringnova about business enquiries or recruitment. The website itself does not determine or document Ringnova's legal basis for handling emails after they are sent. Ringnova must confirm the applicable purposes and legal basis, how long enquiry emails and candidate materials are kept, and how they are securely deleted.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Your choices and privacy rights")}</h3>
+            <p>{t("You can choose not to submit the Contact form, send an email, or start a WhatsApp conversation. Depending on where you live and the laws that apply, you may have rights concerning personal information Ringnova holds. Add Ringnova's confirmed privacy contact and explain how to make a request before publication; the applicable rights and response process require review.")}</p>
+          </section>
+
+          <section className="privacy-policy-section">
+            <h3>{t("Updates to this notice")}</h3>
+            <p>{t("This draft was prepared on 4 October 2026 from the website code available at that time. Once reviewed and approved, Ringnova should publish the effective date here and update this notice when its data practices or service providers change.")}</p>
+          </section>
+
           <ArrowLink to="/contact">{t("Back to contact")}</ArrowLink>
         </Reveal>
       </section>
@@ -1688,13 +1776,7 @@ function HiringProcessSection() {
 
 function RecruitmentCTASection() {
   const { t } = useI18n();
-  const applicationSubject = "Spontaneous Application – Ringnova";
-  const applicationHref = `https://mail.google.com/mail/?${new URLSearchParams({
-    view: "cm",
-    fs: "1",
-    to: careersContacts.applicationEmail,
-    su: applicationSubject,
-  })}`;
+  const applicationHref = `mailto:${careersContacts.applicationEmail}?subject=${encodeURIComponent("Spontaneous Application – Ringnova")}`;
   return (
     <section className="careers-recruitment section-pad" id="careers-recruitment" aria-labelledby="careers-recruitment-title">
       <Reveal className="container careers-recruitment-panel">
@@ -2024,6 +2106,9 @@ function AmbientStars() {
 
 function Layout() {
   const { t } = useI18n();
+  const { pathname } = useLocation();
+  const showWhatsAppWidget = pathname === "/contact" || pathname.startsWith("/careers");
+  const whatsappContactUrl = `https://wa.me/${careersContacts.whatsappNumber}`;
   return (
     <>
       <AmbientStars />
@@ -2034,6 +2119,18 @@ function Layout() {
         <AnimatedRoutes />
       </main>
       <Footer />
+      {showWhatsAppWidget && (
+        <a
+          className="whatsapp-float"
+          href={whatsappContactUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t("Chat with us on WhatsApp")}
+        >
+          <span className="whatsapp-float-icon"><WhatsAppLogo size={22} /></span>
+          <span className="whatsapp-float-label" aria-hidden="true">{t("Chat with us on WhatsApp")}</span>
+        </a>
+      )}
     </>
   );
 }
