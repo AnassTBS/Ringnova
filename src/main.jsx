@@ -151,58 +151,287 @@ function Icon({ name, size = 22, className = "" }) {
   };
 
   const paths = {
-    chat: (
-      <>
-        <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z" />
-        <path d="M8 11h.01M12 11h.01M16 11h.01" />
-      </>
-    ),
-    mail: (
-      <>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="m4 7 8 6 8-6" />
-      </>
-    ),
-    whatsapp: (
-      <>
-        <path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z" />
-        <path d="M8.5 8.1c.3-.4.6-.4.9-.4h.4c.2 0 .4.1.5.4l.7 1.7c.1.2.1.4-.1.6l-.6.7c-.2.2-.2.4 0 .6.4.7 1.1 1.4 1.8 1.8.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.2.1.3.3.3.5 0 .3-.1 1.1-.6 1.5-.5.5-1.2.7-2 .5-1-.2-2.2-.8-3.4-1.9-1.2-1.1-2-2.4-2.2-3.4-.2-.8.1-1.5.7-2Z" />
-      </>
-    ),
-    phone: (
-      <path d="M7 3H5a2 2 0 0 0-2 2c.8 8.3 7.7 15.2 16 16a2 2 0 0 0 2-2v-2l-4.3-2-2.2 2.2a14 14 0 0 1-6.7-6.7L10 8.3 8 4Z" />
-    ),
-    spark: (
-      <>
-        <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />
-        <path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z" />
-      </>
-    ),
-    calendar: (
-      <>
-        <rect x="3" y="5" width="18" height="16" rx="3" />
-        <path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" />
-      </>
-    ),
-    wave: (
-      <>
-        <path d="M3 12h2l2-7 4 14 3-11 2 7 2-3h3" />
-      </>
-    ),
     arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
     arrowUp: <path d="M7 17 17 7M7 7h10v10" />,
-    globe: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
-      </>
-    ),
-    check: <path d="m5 12 4 4L19 6" />,
     menu: <path d="M4 7h16M4 12h16M4 17h16" />,
     close: <path d="m6 6 12 12M18 6 6 18" />,
   };
 
   return <svg {...common}>{paths[name]}</svg>;
+}
+
+function ServiceIllustration({ type }) {
+  const common = {
+    className: "service-illustration-art",
+    viewBox: "0 0 64 64",
+    fill: "none",
+    "aria-hidden": true,
+  };
+
+  const scenes = {
+    chat: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M13 20.5A13.5 13.5 0 0 1 26.5 7h15A13.5 13.5 0 0 1 55 20.5v5A13.5 13.5 0 0 1 41.5 39H29l-9 6v-8.2A13.4 13.4 0 0 1 13 25.5v-5Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M24 23h.1M32 23h.1M40 23h.1" stroke="#164F43" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M37 43.5A9.5 9.5 0 0 1 46.5 34h4A9.5 9.5 0 0 1 60 43.5v1A9.5 9.5 0 0 1 50.5 54H45l-6 4v-6a9.4 9.4 0 0 1-2-7.5Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="m49 39 .9 2.2 2.1.8-2.1.8L49 46l-.9-2.2-2.1-.8 2.1-.8L49 39Z" fill="#A5C96A" />
+      </>
+    ),
+    phone: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <path d="M17 25a15 15 0 0 1 30 0" stroke="#164F43" strokeWidth="2.4" strokeLinecap="round" />
+        <path d="M16 24h5v15h-5a4 4 0 0 1-4-4v-7a4 4 0 0 1 4-4ZM48 24h-5v15h5a4 4 0 0 0 4-4v-7a4 4 0 0 0-4-4Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M45 40a11 11 0 0 1-11 10h-3" stroke="#164F43" strokeWidth="2" strokeLinecap="round" />
+        <rect x="26" y="47" width="8" height="6" rx="3" fill="#D4EF72" />
+        <path d="M22 17a12 12 0 0 1 20 0" stroke="#A5C96A" strokeWidth="2" strokeLinecap="round" />
+      </>
+    ),
+    spark: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <circle cx="27" cy="23" r="8" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M12 51a15 15 0 0 1 30 0v3H12v-3Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="48" cy="20" r="9" fill="#D4EF72" />
+        <path d="M48 15v10M43 20h10M47 19h2v2h-2z" stroke="#164F43" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="m46 37 2 2 4-5" stroke="#164F43" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    calendar: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <rect x="14" y="14" width="36" height="38" rx="6" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M23 11v9M41 11v9M14 25h36" stroke="#164F43" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M23 33h5v5h-5z" fill="#D9EEE2" />
+        <path d="m34 35 3 3 6-7" stroke="#164F43" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M23 43h5" stroke="#A5C96A" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="49" cy="47" r="8" fill="#D4EF72" />
+        <path d="m46 47 2 2 4-4" stroke="#164F43" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    wave: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M18 23a19 19 0 0 1 28 0M23 29a12 12 0 0 1 18 0" stroke="#A5C96A" strokeWidth="2" strokeLinecap="round" />
+        <path d="m23 34 7-4 5 5 7-4" stroke="#164F43" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18 42.5V40a14 14 0 0 1 28 0v2.5" stroke="#164F43" strokeWidth="2.2" strokeLinecap="round" />
+        <rect x="15" y="40" width="7" height="12" rx="3.5" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <rect x="42" y="40" width="7" height="12" rx="3.5" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M42 52a10 10 0 0 1-10 8h-2" stroke="#164F43" strokeWidth="2" strokeLinecap="round" />
+      </>
+    ),
+    languages: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M15 18.5A8.5 8.5 0 0 1 23.5 10h15a8.5 8.5 0 0 1 0 17h-7l-6 4v-5A8.5 8.5 0 0 1 15 18.5Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M26 18.5h.1M31 18.5h.1M36 18.5h.1" stroke="#164F43" strokeWidth="3" strokeLinecap="round" />
+        <path d="M31 39.5A8.5 8.5 0 0 1 39.5 31h7a8.5 8.5 0 0 1 0 17h-4l-6 4v-5.5a8.5 8.5 0 0 1-5.5-7Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="40" cy="39.5" r="1" fill="#A5C96A" />
+        <circle cx="44" cy="39.5" r="1" fill="#A5C96A" />
+      </>
+    ),
+    trust: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="m32 11 17 6v13c0 11-7.2 19.1-17 23-9.8-3.9-17-12-17-23V17l17-6Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="m23.5 31.5 5.5 5.5 11.5-12" stroke="#164F43" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="48" cy="17" r="7" fill="#D4EF72" />
+        <path d="m48 13 .9 2.1 2.1.9-2.1.9L48 20l-.9-2.1-2.1-.9 2.1-.9L48 13Z" fill="#164F43" />
+      </>
+    ),
+    reliability: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="m32 11 17 6v13c0 11-7.2 19.1-17 23-9.8-3.9-17-12-17-23V17l17-6Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="m23.5 31.5 5.5 5.5 11.5-12" stroke="#164F43" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="48" cy="17" r="7" fill="#D4EF72" />
+      </>
+    ),
+    responsiveness: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M12 20.5A12.5 12.5 0 0 1 24.5 8h17A12.5 12.5 0 0 1 54 20.5v3A12.5 12.5 0 0 1 41.5 36H28l-9 6v-8.1A12.4 12.4 0 0 1 12 23.5v-3Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M24 22h.1M32 22h.1M40 22h.1" stroke="#164F43" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="m47 42 1.3 3.2 3.2 1.3-3.2 1.3L47 51l-1.3-3.2-3.2-1.3 3.2-1.3L47 42Z" fill="#A5C96A" />
+      </>
+    ),
+    flexibility: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <rect x="14" y="15" width="36" height="34" rx="7" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M22 25h20M22 39h20" stroke="#A5C96A" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="29" cy="25" r="4" fill="#D4EF72" stroke="#164F43" strokeWidth="2" />
+        <circle cx="37" cy="39" r="4" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" />
+        <path d="m47 13 .9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z" fill="#164F43" />
+      </>
+    ),
+    connection: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M9 21.5A10.5 10.5 0 0 1 19.5 11h16A10.5 10.5 0 0 1 46 21.5v2A10.5 10.5 0 0 1 35.5 34H23l-8 5v-7.2A10.4 10.4 0 0 1 9 23.5v-2Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M24 45a8 8 0 0 1 8-8h12a8 8 0 0 1 0 16h-8l-6 4v-6a8 8 0 0 1-6-6Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="20" cy="22" r="1.5" fill="#A5C96A" />
+        <circle cx="27" cy="22" r="1.5" fill="#A5C96A" />
+        <circle cx="34" cy="22" r="1.5" fill="#A5C96A" />
+      </>
+    ),
+    location: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <path d="M32 53s16-15.1 16-29a16 16 0 1 0-32 0c0 13.9 16 29 16 29Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2.2" strokeLinejoin="round" />
+        <circle cx="32" cy="24" r="7" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" />
+        <path d="m32 19 1.2 3h3l-2.4 1.7.9 3-2.7-1.8-2.7 1.8.9-3-2.4-1.7h3L32 19Z" fill="#A5C96A" />
+      </>
+    ),
+    europe: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <circle cx="31" cy="31" r="18" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M13 31h36M31 13a29 29 0 0 1 0 36M31 13a29 29 0 0 0 0 36" stroke="#A5C96A" strokeWidth="1.7" />
+        <path d="M45 39a8 8 0 0 1 8 8c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 8-8Z" fill="#D4EF72" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <circle cx="45" cy="47" r="2.3" fill="#164F43" />
+      </>
+    ),
+  };
+
+  return <svg {...common}>{scenes[type]}</svg>;
+}
+
+function CareerAreaIcon({ type }) {
+  const line = { fill: "none", stroke: "#164F43", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" };
+  const scenes = {
+    "customer-experience": (
+      <>
+        <path d="M8 10a6 6 0 0 1 6-6h9a6 6 0 0 1 6 6v3a6 6 0 0 1-6 6h-7l-5 3v-5a6 6 0 0 1-3-5Z" {...line} />
+        <path d="M13 10h.1m5 0h.1m5 0h.1" {...line} strokeWidth="2.8" />
+        <path d="M22 22h5m-2.5-2.5V25" {...line} stroke="#90B85C" />
+      </>
+    ),
+    sales: (
+      <>
+        <path d="M7 26h26" {...line} />
+        <path d="M10 23v-6h5v6m4 0V12h5v11m4 0V7h5v16" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="m9 13 7-4 5 1 8-6m-1 0h3v3" {...line} stroke="#90B85C" />
+      </>
+    ),
+    telemarketing: (
+      <>
+        <path d="M8 19v-3a12 12 0 0 1 24 0v3" {...line} />
+        <path d="M9 16h4v9h-3a3 3 0 0 1-3-3v-3a3 3 0 0 1 2-3Zm22 0h-4v9h3a3 3 0 0 0 3-3v-3a3 3 0 0 0-2-3Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="M27 25a7 7 0 0 1-7 6h-2" {...line} />
+        <rect x="16" y="29" width="5" height="3" rx="1.5" fill="#D4EF72" stroke="#164F43" strokeWidth="1.4" />
+      </>
+    ),
+    "lead-generation": (
+      <>
+        <path d="M7 8h26l-10 11v7l-6 4V19L7 8Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M27 25v5m-2.5-2.5h5m-1-15 .8 1.8 1.7.7-1.7.7-.8 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z" {...line} stroke="#90B85C" />
+      </>
+    ),
+    "appointment-setting": (
+      <>
+        <rect x="7" y="9" width="26" height="23" rx="4" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.8" />
+        <path d="M13 6v6m14-6v6M7 16h26" {...line} />
+        <path d="m14 23 3 3 6-6" {...line} stroke="#90B85C" strokeWidth="2.2" />
+      </>
+    ),
+    operations: (
+      <>
+        <circle cx="20" cy="20" r="11" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" />
+        <circle cx="20" cy="20" r="4" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.7" />
+        <path d="M20 6v4m0 20v4M6 20h4m20 0h4M10 10l3 3m14 14 3 3m0-20-3 3m-14 14-3 3" {...line} />
+        <path d="m18 20 1.5 1.5L23 18" {...line} stroke="#90B85C" />
+      </>
+    ),
+    "back-office": (
+      <>
+        <path d="M7 12h11l3 3h12v14H7V12Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M10 9h10l3 3m-9 8h13m-13 4h9" {...line} />
+        <path d="M25 18h5" {...line} stroke="#90B85C" />
+      </>
+    ),
+    "corporate-support": (
+      <>
+        <path d="M7 14 20 6l13 8M10 14v16m7-16v16m6-16v16m7-16v16M7 30h26" {...line} />
+        <path d="M5 33h30" {...line} stroke="#90B85C" strokeWidth="2.2" />
+        <circle cx="20" cy="11" r="1.4" fill="#D4EF72" />
+      </>
+    ),
+  };
+
+  return (
+    <svg className="careers-area-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <circle cx="20" cy="20" r="19" fill="#EDF3E7" />
+      {scenes[type]}
+    </svg>
+  );
+}
+
+function CareerQualityIcon({ type }) {
+  const line = { fill: "none", stroke: "#164F43", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" };
+  const scenes = {
+    communication: (
+      <>
+        <path d="M8 12.5A8.5 8.5 0 0 1 16.5 4h8A8.5 8.5 0 0 1 33 12.5v2a8.5 8.5 0 0 1-8.5 8.5h-7l-6 4v-6.1A8.4 8.4 0 0 1 8 14.5v-2Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M15 13h.1m5 0h.1m5 0h.1" stroke="#164F43" strokeWidth="3" strokeLinecap="round" />
+        <path d="m28 26 1.1 2.5 2.5 1.1-2.5 1.1L28 33l-1.1-2.3-2.5-1.1 2.5-1.1L28 26Z" fill="#A5C96A" />
+      </>
+    ),
+    "customer-mindset": (
+      <>
+        <path d="M20 29S7 21.2 7 12.5a6.4 6.4 0 0 1 11.6-3.8A6.4 6.4 0 0 1 30 12.5C30 21.2 20 29 20 29Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.9" strokeLinejoin="round" />
+        <path d="m17 17 2.2 2.2 4.8-5" {...line} strokeWidth="2" />
+        <circle cx="30" cy="9" r="5" fill="#D4EF72" />
+        <path d="m30 6.5.7 1.7 1.8.7-1.8.7-.7 1.9-.7-1.9-1.8-.7 1.8-.7.7-1.7Z" fill="#164F43" />
+      </>
+    ),
+    reliability: (
+      <>
+        <path d="m20 7 12 4v8c0 7-5 12-12 15-7-3-12-8-12-15v-8l12-4Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="m13.5 19.5 4.2 4.2 9-10" {...line} strokeWidth="2.7" />
+        <circle cx="31" cy="10" r="5" fill="#D4EF72" />
+      </>
+    ),
+    curiosity: (
+      <>
+        <circle cx="17" cy="17" r="10" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="m24.5 24.5 7 7" {...line} strokeWidth="3" />
+        <path d="M17 11v7m-3.5-3.5h7" {...line} stroke="#A5C96A" strokeWidth="2" />
+        <circle cx="29" cy="9" r="4" fill="#D4EF72" />
+      </>
+    ),
+    teamwork: (
+      <>
+        <circle cx="20" cy="13" r="5" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.8" />
+        <circle cx="9.5" cy="16" r="4" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" />
+        <circle cx="30.5" cy="16" r="4" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" />
+        <path d="M10 31a10 10 0 0 1 20 0v2H10v-2Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M4.5 30a6 6 0 0 1 6-6m25 6a6 6 0 0 0-6-6" {...line} />
+        <path d="M18 24h4" {...line} stroke="#A5C96A" strokeWidth="2.4" />
+      </>
+    ),
+    adaptability: (
+      <>
+        <path d="M29 13a11 11 0 0 0-18-3l-3 3m0 0V8m0 5h5M11 27a11 11 0 0 0 18 3l3-3m0 0v5m0-5h-5" {...line} strokeWidth="2.2" />
+        <circle cx="20" cy="20" r="5" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.7" />
+        <path d="m20 16 1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5Z" fill="#A5C96A" />
+      </>
+    ),
+    learning: (
+      <>
+        <path d="M20 12c-4-3-8-4-13-3v20c5-1 9 0 13 3 4-3 8-4 13-3V9c-5-1-9 0-13 3Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.9" strokeLinejoin="round" />
+        <path d="M20 12v20m-9-15 5 1m-5 4 5 1m8-6 5-1m-5 5 5-1" {...line} stroke="#A5C96A" strokeWidth="1.7" />
+      </>
+    ),
+  };
+
+  return (
+    <svg className="careers-quality-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <circle cx="20" cy="20" r="19" fill="#EAF2E8" />
+      {scenes[type]}
+    </svg>
+  );
 }
 
 function WhatsAppLogo({ size = 21 }) {
@@ -228,21 +457,19 @@ function Brand({ light = false }) {
     <SmartNavLink
       to="/"
       className={`brand${light ? " brand-light" : ""}`}
-      aria-label={t("Ringnova home")}
+      aria-label={t("Rangnova home")}
     >
       <span className="brand-mark-wrap">
         <img
           className="brand-mark"
-          src={light ? "/ringnova-mark-light.webp" : "/ringnova-mark.webp"}
+          src={light ? "/rangnova-mark-light.webp" : "/rangnova-mark.webp"}
           alt=""
         />
         <RingnovaStar size={12} className="brand-star-flare" />
       </span>
-      <img
-        className="brand-wordmark"
-        src={light ? "/ringnova-wordmark-light.webp" : "/ringnova-wordmark.webp"}
-        alt=""
-      />
+      <span className="brand-wordmark" aria-hidden="true">
+        <span>Rang</span><span className="brand-wordmark-accent">nova</span>
+      </span>
     </SmartNavLink>
   );
 }
@@ -439,7 +666,7 @@ function Footer() {
           <div className="footer-nav-group">
             <p className="footer-label">{t("Explore")}</p>
             <Link to="/services">{t("Our services")}</Link>
-            <Link to="/about">{t("About Ringnova")}</Link>
+            <Link to="/about">{t("About Rangnova")}</Link>
             <Link to="/careers">{t("Careers")}</Link>
             <Link to="/contact">{t("Get in touch")}</Link>
           </div>
@@ -454,7 +681,7 @@ function Footer() {
           </a>
         </div>
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Ringnova. {t("All rights reserved.")}</span>
+          <span>© {new Date().getFullYear()} Rangnova. {t("All rights reserved.")}</span>
           <Link to="/privacy">{t("Privacy policy")} <span className="placeholder-tag">{t("Placeholder")}</span></Link>
           <span>{t("Made for better conversations.")}</span>
         </div>
@@ -492,7 +719,7 @@ function ServiceCard({ service, compact = false }) {
       className={`service-card${compact ? " service-card-compact" : ""}`}
     >
       <div className="service-card-top">
-        <span className="service-icon"><Icon name={service.icon} /></span>
+        <span className="service-icon"><ServiceIllustration type={service.icon} /></span>
         <span className="service-number">{service.number}</span>
       </div>
       <h3>{t(service.title)}</h3>
@@ -595,7 +822,12 @@ function Home() {
               <ArrowLink to="/services">{t("Explore our services")}</ArrowLink>
             </div>
             <div className="hero-proof">
-              <span className="proof-avatars" aria-hidden="true"><i>R</i><i>N</i><i>+</i></span>
+              <span className="proof-avatars" aria-hidden="true">
+                <span className="proof-avatar proof-avatar-primary" />
+                <span className="proof-avatar proof-avatar-teammate" />
+                <span className="proof-avatar proof-avatar-colleague" />
+                <i>+</i>
+              </span>
               <span>{t("Thoughtful support.")}<br /><strong>{t("Tailored to your team.")}</strong></span>
             </div>
           </div>
@@ -616,9 +848,9 @@ function Home() {
           </div>
           <div className="intro-text">
             <p>
-              {t("Growing a business means showing up for every customer, prospect, and opportunity. Ringnova gives you a responsive team to help make those conversations happen—without losing the personal touch.")}
+              {t("Growing a business means showing up for every customer, prospect, and opportunity. Rangnova gives you a responsive team to help make those conversations happen—without losing the personal touch.")}
             </p>
-            <ArrowLink to="/about">{t("Get to know Ringnova")}</ArrowLink>
+            <ArrowLink to="/about">{t("Get to know Rangnova")}</ArrowLink>
           </div>
         </Reveal>
       </section>
@@ -653,7 +885,7 @@ function Home() {
               <div className="photo-label">{t("Made to fit your business")}</div>
             </div>
             <div className="floating-language">
-              <Icon name="globe" size={19} /><span><strong>{t("3 languages")}</strong><small>{t("One connected team")}</small></span>
+              <span className="decorative-illustration floating-language-art"><ServiceIllustration type="languages" /></span><span><strong>{t("3 languages")}</strong><small>{t("One connected team")}</small></span>
             </div>
           </div>
           <div className="approach-copy">
@@ -661,9 +893,9 @@ function Home() {
             <h2>{t("Your business isn't ")}<em>{t("one-size-fits-all.")}</em></h2>
             <p>{t("So your customer communication shouldn't be either. We take time to understand how you work and shape a support approach around what your business actually needs.")}</p>
             <ul className="check-list">
-              <li><span><Icon name="check" size={15} /></span> {t("Responsive, reliable communication")}</li>
-              <li><span><Icon name="check" size={15} /></span> {t("English, French, and Arabic support")}</li>
-              <li><span><Icon name="check" size={15} /></span> {t("Flexible onboarding, tailored to you")}</li>
+              <li><span className="decorative-illustration check-list-illustration"><ServiceIllustration type="trust" /></span> {t("Responsive, reliable communication")}</li>
+              <li><span className="decorative-illustration check-list-illustration"><ServiceIllustration type="trust" /></span> {t("English, French, and Arabic support")}</li>
+              <li><span className="decorative-illustration check-list-illustration"><ServiceIllustration type="trust" /></span> {t("Flexible onboarding, tailored to you")}</li>
             </ul>
             <ButtonLink to="/about" variant="outline">{t("How we work")}</ButtonLink>
           </div>
@@ -692,7 +924,7 @@ function Home() {
             <ButtonLink to="/contact">{t("Book a consultation")}</ButtonLink>
           </div>
           <div className="closing-aside">
-            <Icon name="chat" size={27} /><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
+            <span className="decorative-illustration closing-aside-art"><ServiceIllustration type="chat" /></span><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
           </div>
         </Reveal>
       </section>
@@ -708,7 +940,7 @@ function PageHero({ eyebrow, title, description, graphic, graphicClass = "", her
       {background && <div className="page-hero-bg-layer">{background}</div>}
       <div className="container page-hero-inner">
         <div>
-          <p className="eyebrow"><span />{eyebrow}</p>
+          <Eyebrow>{eyebrow}</Eyebrow>
           <h1>{title}</h1>
           <p>{description}</p>
         </div>
@@ -731,7 +963,7 @@ function ServiceRows({ services: list }) {
       {list.map((service) => (
         <article className="service-row" key={service.number}>
           <span className="service-row-number">{service.number}</span>
-          <span className="service-row-icon"><Icon name={service.icon} /></span>
+          <span className="service-row-icon"><ServiceIllustration type={service.icon} /></span>
           <div><h3>{t(service.title)}</h3><p>{t(service.description)}</p></div>
           <Icon name="arrowUp" className="service-row-arrow" />
         </article>
@@ -785,18 +1017,21 @@ function ServicePage() {
 function ValuesGrid() {
   const { t } = useI18n();
   const values = [
-    { num: "01", title: "Reliability", body: "Show up with care, follow through, and make dependable communication part of the experience." },
-    { num: "02", title: "Responsiveness", body: "Stay attentive to your needs and keep communication open as your business evolves." },
-    { num: "03", title: "Flexibility", body: "Build an approach around your priorities, not a pre-set package that doesn't fit." },
-    { num: "04", title: "Connection", body: "Support conversations in English, French, and Arabic for customers across Europe." },
+    { num: "01", title: "Reliability", body: "Show up with care, follow through, and make dependable communication part of the experience.", illustration: "reliability" },
+    { num: "02", title: "Responsiveness", body: "Stay attentive to your needs and keep communication open as your business evolves.", illustration: "responsiveness" },
+    { num: "03", title: "Flexibility", body: "Build an approach around your priorities, not a pre-set package that doesn't fit.", illustration: "flexibility" },
+    { num: "04", title: "Connection", body: "Support conversations in English, French, and Arabic for customers across Europe.", illustration: "connection" },
   ];
 
   return (
     <div className="values-grid">
       {values.map((v) => (
         <article key={v.num}>
-          <span>{v.num}</span>
-          <div><h3>{t(v.title)}</h3><p>{t(v.body)}</p></div>
+          <div className="values-card-top">
+            <span className="values-card-art"><ServiceIllustration type={v.illustration} /></span>
+            <span className="values-card-number">{v.num}</span>
+          </div>
+          <div className="values-card-copy"><h3>{t(v.title)}</h3><p>{t(v.body)}</p></div>
         </article>
       ))}
     </div>
@@ -808,7 +1043,7 @@ function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow={t("ABOUT RINGNOVA")}
+        eyebrow={t("ABOUT RANGNOVA")}
         title={<>{t("Better business starts")}<br />{t("with ")}<em>{t("being there.")}</em></>}
         description={t("We believe the conversations around your business deserve the same care and attention you put into building it.")}
         graphicClass="about-hero-photo-wrap"
@@ -821,7 +1056,7 @@ function AboutPage() {
             <h2>{t("Every interaction is a chance to ")}<em>{t("show you care.")}</em></h2>
           </div>
           <div className="about-story-copy">
-            <p>{t("Ringnova is a Morocco-based team helping growing businesses across Europe stay close to their customers and prospects. We bring a considered, human approach to customer support and business communication.")}</p>
+            <p>{t("Rangnova is a Morocco-based team helping growing businesses across Europe stay close to their customers and prospects. We bring a considered, human approach to customer support and business communication.")}</p>
             <p>{t("We know no two businesses work the same way. That's why we start by listening—then shape a flexible way of working around your needs, your customers, and the conversations that matter to you.")}</p>
             <ArrowLink to="/contact">{t("Start a conversation")}</ArrowLink>
           </div>
@@ -896,7 +1131,7 @@ function ContactForm() {
     if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errs.email = "Please enter a valid work email address.";
     }
-    if (!formData.consent) errs.consent = "Please agree to prepare an email with your details for Ringnova.";
+    if (!formData.consent) errs.consent = "Please agree to prepare an email with your details for Rangnova.";
     return errs;
   };
 
@@ -927,7 +1162,7 @@ function ContactForm() {
       .filter(([, value]) => value.trim())
       .map(([label, value, translateValue]) => `${t(label)}: ${translateValue ? t(value.trim()) : value.trim()}`)
       .join("\n");
-    const url = `mailto:ringnovasales@gmail.com?subject=${encodeURIComponent("New website inquiry — Ringnova")}&body=${encodeURIComponent(`${t("Hello Ringnova,")}\n\n${messageDetails}`)}`;
+    const url = `mailto:ringnovasales@gmail.com?subject=${encodeURIComponent("New website inquiry — Rangnova")}&body=${encodeURIComponent(`${t("Hello Rangnova,")}\n\n${messageDetails}`)}`;
 
     setEmailUrl(url);
     setSubmitted(true);
@@ -961,7 +1196,7 @@ function ContactForm() {
         </div>
         <h3>{t("Your email draft is ready")}</h3>
         <p className="form-success-lead">
-          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Review the details in your email app and click Send to contact Ringnova. Your message has not been sent yet.")}
+          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Review the details in your email app and click Send to contact Rangnova. Your message has not been sent yet.")}
         </p>
         <p className="form-success-sub">
           {t("If your email app did not open automatically, use the button below.")}
@@ -1180,7 +1415,7 @@ function ContactForm() {
           </div>
         </div>
         <div className="form-field">
-          <label htmlFor="message">{t("Briefly describe the challenge you want Ringnova to help you with...")}</label>
+          <label htmlFor="message">{t("Briefly describe the challenge you want Rangnova to help you with...")}</label>
           <textarea
             id="message"
             name="message"
@@ -1360,67 +1595,16 @@ function PrivacyPage() {
       <PageHero
         eyebrow={t("PRIVACY")}
         title={<>{t("privacyTitleFirst")}<br /><em>{t("privacyTitleEmphasis")}</em></>}
-        description={t("This draft describes data practices visible in the current website. Ringnova must confirm the marked business details and obtain appropriate review before publication.")}
+        description={t("This page is a placeholder and is not a complete privacy policy. Approved legal text must be added before the site is published.")}
         graphic={<BrandOrbit />}
       />
       <section className="privacy-section section-pad">
         <Reveal className="container privacy-content">
-          <span className="privacy-draft-label">{t("DRAFT — DETAILS REQUIRE CONFIRMATION")}</span>
-          <h2>{t("Privacy notice for the Ringnova website")}</h2>
-          <p>{t("This draft reflects the website's current technical behavior, not a complete legal assessment. Items that depend on Ringnova's business arrangements are identified below and must be confirmed before this notice is published.")}</p>
-
-          <div className="privacy-draft-checklist">
-            <h3>{t("Ringnova: confirm before publication")}</h3>
-            <ul>
-              <li>{t("Full legal name of the organization responsible for this website")}</li>
-              <li>{t("Registered address and country of establishment")}</li>
-              <li>{t("A monitored privacy contact address and, if applicable, data-protection contact")}</li>
-              <li>{t("Applicable purposes and legal basis for handling enquiries and recruitment emails")}</li>
-              <li>{t("Retention and deletion periods for emails and candidate documents")}</li>
-              <li>{t("Hosting, email, and other service providers, including processing locations and any international transfers")}</li>
-            </ul>
-          </div>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Who is responsible")}</h3>
-            <p>{t("The website is presented as Ringnova. The legal entity that operates it, its registered address, and its country of establishment have not been verified for this draft. Insert those details and a privacy contact confirmed by Ringnova before publication; the sales and recruitment inboxes are not assumed to be privacy contacts.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Information and contact enquiries")}</h3>
-            <p>{t("The Contact form can include your name, work email, optional phone number, company and professional details, country, service interests, referral source, message, and consent choice. The form prepares a message addressed to ringnovasales@gmail.com in your selected email application. The website does not submit this form to a Ringnova server. Ringnova receives the information only if you choose to send the email.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Recruitment and WhatsApp")}</h3>
-            <p>{t("The Careers page provides an email link to ringnovarecruitment@gmail.com. If you use it, you choose what information and attachments, such as a CV or motivation letter, to send. The website does not upload or receive those files. WhatsApp links open a conversation with Ringnova in WhatsApp; information you choose to share there is handled by WhatsApp and the participants under their applicable terms and privacy information.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Information stored in your browser")}</h3>
-            <p>{t("The site stores your language preference in your browser's local storage. The Contact form's entries are held in page memory while you use the form and are not saved by the site to a Ringnova account or database. The phone field uses your browser's time-zone setting to suggest a country calling code; this suggestion is calculated locally.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Cookies and third-party services")}</h3>
-            <p>{t("No analytics or advertising cookies or tracking tools were found in the current website code. The site requests font files from Google Fonts and a country-flag image from the Twemoji CDN hosted by cdnjs. Those providers receive browser requests and may process technical information such as your IP address. Ringnova must confirm the current providers, their terms, and any associated transfers before publication.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Purposes, legal basis, and retention")}</h3>
-            <p>{t("The email links are provided so you can contact Ringnova about business enquiries or recruitment. The website itself does not determine or document Ringnova's legal basis for handling emails after they are sent. Ringnova must confirm the applicable purposes and legal basis, how long enquiry emails and candidate materials are kept, and how they are securely deleted.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Your choices and privacy rights")}</h3>
-            <p>{t("You can choose not to submit the Contact form, send an email, or start a WhatsApp conversation. Depending on where you live and the laws that apply, you may have rights concerning personal information Ringnova holds. Add Ringnova's confirmed privacy contact and explain how to make a request before publication; the applicable rights and response process require review.")}</p>
-          </section>
-
-          <section className="privacy-policy-section">
-            <h3>{t("Updates to this notice")}</h3>
-            <p>{t("This draft was prepared on 4 October 2026 from the website code available at that time. Once reviewed and approved, Ringnova should publish the effective date here and update this notice when its data practices or service providers change.")}</p>
-          </section>
-
+          <span className="placeholder-pill">{t("POLICY PLACEHOLDER")}</span>
+          <h2>{t("Privacy policy to be supplied")}</h2>
+          <p>{t("This page is a placeholder, not a complete privacy policy. When you select Send Email on the contact form, the details you provided are included in an email draft addressed to ringnovasales@gmail.com. The details are passed to the email app you choose; review and send the draft before Rangnova receives your message. The form does not submit to or store data on a Rangnova backend.")}</p>
+          <p>{t("The phone field uses your browser's timezone to suggest a default calling code; this lookup runs in your browser and does not send your IP address to a geolocation provider. No analytics or advertising cookies have been added. These details must be reviewed and replaced with Rangnova's approved privacy information before publication.")}</p>
+          <p>{t("The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.")}</p>
           <ArrowLink to="/contact">{t("Back to contact")}</ArrowLink>
         </Reveal>
       </section>
@@ -1478,7 +1662,7 @@ function CareersHero() {
           <div className="careers-hero-photo-shade" aria-hidden="true" />
           <div className="careers-hero-photo-stamp" aria-hidden="true">
             <RingnovaStar size={22} />
-            <span>RINGNOVA</span>
+            <span>RANGNOVA</span>
           </div>
           <span className="careers-hero-art-caption">{t("careers.hero.artCaption")}</span>
         </div>
@@ -1490,6 +1674,7 @@ function CareersHero() {
 
 function WhyRingnovaSection() {
   const { t } = useI18n();
+  const illustrations = ["location", "europe", "languages"];
   return (
     <section className="careers-why section-pad">
       <Reveal className="container careers-why-grid">
@@ -1502,7 +1687,9 @@ function WhyRingnovaSection() {
           <ul className="careers-facts">
             {verifiedCareersContent.employerFacts.map((fact, index) => (
               <li key={fact.id}>
-                <span aria-hidden="true">0{index + 1}</span>
+                <span className="careers-fact-art" aria-hidden="true">
+                  <ServiceIllustration type={illustrations[index]} />
+                </span>
                 <strong>{t(fact.textKey)}</strong>
               </li>
             ))}
@@ -1526,11 +1713,10 @@ function CareerAreasSection() {
           <p>{t("careers.areas.body")}</p>
         </div>
         <ul className="careers-area-list">
-          {verifiedCareersContent.careerAreas.map((area, index) => (
+          {verifiedCareersContent.careerAreas.map((area) => (
             <li key={area.id}>
-              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <CareerAreaIcon type={area.id} />
               <strong>{t(area.textKey)}</strong>
-              <Icon name="arrowUp" size={16} />
             </li>
           ))}
         </ul>
@@ -1694,9 +1880,9 @@ function CandidateQualitiesSection() {
           <p>{t("careers.qualities.body")}</p>
         </div>
         <ul className="careers-quality-list">
-          {verifiedCareersContent.candidateQualities.map((quality, index) => (
+          {verifiedCareersContent.candidateQualities.map((quality) => (
             <li key={quality.id}>
-              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <CareerQualityIcon type={quality.id} />
               {t(quality.textKey)}
             </li>
           ))}
@@ -1764,7 +1950,7 @@ function HiringProcessSection() {
         <ol className="careers-hiring-steps">
           {proposedCareersContent.recruitmentSteps.map((step, index) => (
             <li key={step.id}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
+              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               <strong>{t(step.textKey)}</strong>
             </li>
           ))}
@@ -1776,7 +1962,7 @@ function HiringProcessSection() {
 
 function RecruitmentCTASection() {
   const { t } = useI18n();
-  const applicationHref = `mailto:${careersContacts.applicationEmail}?subject=${encodeURIComponent("Spontaneous Application – Ringnova")}`;
+  const applicationHref = `mailto:${careersContacts.applicationEmail}?subject=${encodeURIComponent("Spontaneous Application – Rangnova")}`;
   return (
     <section className="careers-recruitment section-pad" id="careers-recruitment" aria-labelledby="careers-recruitment-title">
       <Reveal className="container careers-recruitment-panel">
@@ -1847,7 +2033,7 @@ function RecruitmentSafetySection() {
   return (
     <section className="careers-safety">
       <div className="container careers-safety-inner">
-        <span className="careers-safety-icon" aria-hidden="true"><Icon name="check" size={17} /></span>
+        <span className="careers-safety-icon decorative-illustration" aria-hidden="true"><ServiceIllustration type="trust" /></span>
         <div>
           <h2>{t("careers.safety.title")}</h2>
           <p>{t("careers.safety.body")}</p>
@@ -1992,10 +2178,10 @@ function CTASection() {
           <Eyebrow>{t("LET'S START A CONVERSATION")}</Eyebrow>
           <h2>{t("Let's find an approach that ")}<em>{t("fits.")}</em></h2>
           <p>{t("Tell us what your business needs. We'll take it from there, together.")}</p>
-          <ButtonLink to="/contact">{t("Talk to Ringnova")}</ButtonLink>
+          <ButtonLink to="/contact">{t("Talk to Rangnova")}</ButtonLink>
         </div>
         <div className="closing-aside">
-          <Icon name="chat" size={27} /><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
+          <span className="decorative-illustration closing-aside-art"><ServiceIllustration type="chat" /></span><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
         </div>
       </Reveal>
     </section>
@@ -2019,7 +2205,7 @@ function AnimatedRoutes() {
     const description = document.querySelector('meta[name="description"]');
     let robots = document.querySelector('meta[name="robots"]');
 
-    document.title = metadata?.[0] || t("PAGE NOT FOUND") + " | Ringnova";
+    document.title = metadata?.[0] || t("PAGE NOT FOUND") + " | Rangnova";
     if (description) {
       description.content = metadata?.[1] || t("The page may have moved, or the address may be incorrect.");
     }
