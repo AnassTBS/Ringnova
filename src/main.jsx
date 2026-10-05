@@ -1110,7 +1110,8 @@ function ContactForm() {
   });
 
   const [submitted, setSubmitted] = React.useState(false);
-  const [emailUrl, setEmailUrl] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState("");
   const [errors, setErrors] = React.useState({});
 
   const handleChange = (e) => {
@@ -1131,11 +1132,11 @@ function ContactForm() {
     if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errs.email = "Please enter a valid work email address.";
     }
-    if (!formData.consent) errs.consent = "Please agree to prepare an email with your details for Rangnova.";
+    if (!formData.consent) errs.consent = "Please agree to submit your inquiry to Rangnova.";
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -1146,27 +1147,33 @@ function ContactForm() {
       return;
     }
 
-    const messageDetails = [
-      ["First name", formData.firstName, false],
-      ["Last name", formData.lastName, false],
-      ["Work email", formData.email, false],
-      ["Phone", formData.phone, false],
-      ["Job function", formData.jobFunction, true],
-      ["Company", formData.company, false],
-      ["Industry", formData.industry, true],
-      ["Country", formData.country, true],
-      ["Service", formData.service, true],
-      ["How they heard about us", formData.source, true],
-      ["Message", formData.message, false],
-    ]
-      .filter(([, value]) => value.trim())
-      .map(([label, value, translateValue]) => `${t(label)}: ${translateValue ? t(value.trim()) : value.trim()}`)
-      .join("\n");
-    const url = `mailto:ringnovasales@gmail.com?subject=${encodeURIComponent("New website inquiry — Rangnova")}&body=${encodeURIComponent(`${t("Hello Rangnova,")}\n\n${messageDetails}`)}`;
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitError("");
 
-    setEmailUrl(url);
-    setSubmitted(true);
-    window.open(url, "_blank", "noopener,noreferrer");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || result.success !== true) {
+        setSubmitError("We couldn’t send your inquiry right now. Please try again.");
+        return;
+      }
+
+      setSubmitted(true);
+      setSubmitError("");
+    } catch {
+      setSubmitError("We couldn’t send your inquiry right now. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -1185,6 +1192,7 @@ function ContactForm() {
       consent: false,
     });
     setErrors({});
+    setSubmitError("");
     setSubmitted(false);
   };
 
@@ -1194,16 +1202,10 @@ function ContactForm() {
         <div className="form-success-star">
           <RingnovaStar size={36} />
         </div>
-        <h3>{t("Your email draft is ready")}</h3>
+        <h3>{t("Your inquiry has been sent")}</h3>
         <p className="form-success-lead">
-          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Review the details in your email app and click Send to contact Rangnova. Your message has not been sent yet.")}
+          {t("Thanks,")} <strong>{formData.firstName}</strong>. {t("Your inquiry has been submitted successfully and our team will be in touch soon.")}
         </p>
-        <p className="form-success-sub">
-          {t("If your email app did not open automatically, use the button below.")}
-        </p>
-        <a className="button button-primary form-reset-btn" href={emailUrl} target="_blank" rel="noopener noreferrer">
-          {t("Continue to email")}
-        </a>
         <button type="button" className="button button-outline form-reset-btn" onClick={handleReset}>
           {t("Edit details")}
         </button>
@@ -1442,7 +1444,7 @@ function ContactForm() {
             aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <span>
-            {t("I agree that the details I provided will be included in an email draft addressed to ringnovasales@gmail.com. I understand I must review and send it in my email app. See the")}{" "}
+            {t("I agree that the details I provided will be sent to Rangnova so the team can respond to my inquiry. See the")}{" "}
             <Link to="/privacy">{t("Privacy Policy")}</Link>. <span className="required-star">*</span>
           </span>
         </label>
@@ -1454,12 +1456,18 @@ function ContactForm() {
         <button
           className="button button-primary form-submit-btn"
           type="submit"
+          disabled={isSubmitting}
         >
-          {t("SEND EMAIL")}
+          {isSubmitting ? t("Sending...") : t("SEND EMAIL")}
           <RingnovaStar size={16} className="btn-star-icon" />
         </button>
+        {submitError && (
+          <p className="field-error" role="alert">
+            {t(submitError)}
+          </p>
+        )}
         <p className="form-privacy-note">
-          {t("Selecting Send Email opens an email draft addressed to ringnovasales@gmail.com with the details you provided. Review and send it from your email app.")}
+          {t("Selecting Send Email sends your inquiry directly to ringnovasales@gmail.com. Our team will review it and get back to you.")}
         </p>
       </div>
     </form>
