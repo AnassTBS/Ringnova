@@ -720,7 +720,7 @@ function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Rangnova. {t("All rights reserved.")}</span>
-          <Link to="/privacy">{t("Privacy policy")} <span className="placeholder-tag">{t("Placeholder")}</span></Link>
+          <Link to="/privacy">{t("Privacy policy")}</Link>
           <span>{t("Made for better conversations.")}</span>
         </div>
       </div>
@@ -1657,22 +1657,35 @@ function ContactPage() {
 
 function PrivacyPage() {
   const { t } = useI18n();
+  const sections = [
+    ["privacy.infoTitle", "privacy.infoBody"],
+    ["privacy.purposeTitle", "privacy.purposeBody"],
+    ["privacy.deliveryTitle", "privacy.deliveryBody"],
+    ["privacy.technicalTitle", "privacy.technicalBody"],
+    ["privacy.providersTitle", "privacy.providersBody"],
+    ["privacy.retentionTitle", "privacy.retentionBody"],
+    ["privacy.rightsTitle", "privacy.rightsBody"],
+    ["privacy.changesTitle", "privacy.changesBody"],
+  ];
   return (
     <>
       <PageHero
         eyebrow={t("PRIVACY")}
         title={<>{t("privacyTitleFirst")}<br /><em>{t("privacyTitleEmphasis")}</em></>}
-        description={t("This page is a placeholder and is not a complete privacy policy. Approved legal text must be added before the site is published.")}
+        description={t("privacy.pageDescription")}
         graphic={<BrandOrbit />}
       />
       <section className="privacy-section section-pad">
         <Reveal className="container privacy-content">
-          <span className="placeholder-pill">{t("POLICY PLACEHOLDER")}</span>
-          <h2>{t("Privacy policy to be supplied")}</h2>
-          <p>{t("This page is a placeholder, not a complete privacy policy. When you select Send Email on the contact form, the details you provided are included in an email draft addressed to ringnovasales@gmail.com. The details are passed to the email app you choose; review and send the draft before Rangnova receives your message. The form does not submit to or store data on a Rangnova backend.")}</p>
-          <p>{t("The phone field uses your browser's timezone to suggest a default calling code; this lookup runs in your browser and does not send your IP address to a geolocation provider. No analytics or advertising cookies have been added. These details must be reviewed and replaced with Rangnova's approved privacy information before publication.")}</p>
-          <p>{t("The final policy should explain what information is collected, why it is used, where it is stored, how long it is retained, which providers process it, and how people can exercise their rights.")}</p>
-          <ArrowLink to="/contact">{t("Back to contact")}</ArrowLink>
+          <h2>{t("Privacy Policy")}</h2>
+          <p>{t("privacy.introBody")}</p>
+          {sections.map(([title, body]) => (
+            <section key={title} aria-labelledby={title}>
+              <h3 id={title}>{t(title)}</h3>
+              <p>{t(body)}</p>
+            </section>
+          ))}
+          <ArrowLink to="/contact">{t("privacy.contactLink")}</ArrowLink>
         </Reveal>
       </section>
     </>
