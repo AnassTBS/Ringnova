@@ -1,9 +1,9 @@
 export const LANGUAGES = [
-  { code: "en", documentTag: "en" },
-  { code: "fr", documentTag: "fr" },
-  { code: "es", documentTag: "es" },
-  { code: "de", documentTag: "de" },
-  { code: "ar", documentTag: "ar", direction: "rtl" },
+  { code: "en", name: "English", documentTag: "en" },
+  { code: "fr", name: "Français", documentTag: "fr" },
+  { code: "es", name: "Español", documentTag: "es" },
+  { code: "de", name: "Deutsch", documentTag: "de" },
+  { code: "ar", name: "العربية", documentTag: "ar", direction: "rtl" },
 ];
 
 export const messages = {

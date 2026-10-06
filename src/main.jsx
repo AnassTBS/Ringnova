@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "./styles.css";
-import { PhoneInputField } from "./PhoneInputField";
 import { LANGUAGES, pageMetadata } from "./translations";
 import { LanguageProvider, useI18n } from "./i18n";
 import { careersContacts, jobs, proposedCareersContent, verifiedCareersContent } from "./careersData";
+
+const PhoneInputField = React.lazy(() =>
+  import("./PhoneInputField").then((module) => ({ default: module.PhoneInputField })),
+);
 
 /* ─── Animation primitives & Brand Star ───────────────────────────────── */
 
@@ -521,6 +524,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { language, setLanguage, t } = useI18n();
+  const menuToggleRef = React.useRef(null);
   const closeMenu = () => setMenuOpen(false);
 
   React.useEffect(() => {
@@ -530,6 +534,25 @@ function Header() {
     return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
 
+  React.useEffect(() => {
+    if (!menuOpen) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !event.target.closest?.(".language-switcher")) {
+        setMenuOpen(false);
+        menuToggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen]);
+
+  const handleLanguageSelect = () => {
+    closeMenu();
+    if (window.matchMedia("(max-width: 700px)").matches) {
+      menuToggleRef.current?.focus();
+    }
+  };
+
   return (
     <header className={`site-header${scrolled ? " header-scrolled" : ""}`}>
       <div className={`container header-inner${menuOpen ? " header-menu-open" : ""}`}>
@@ -537,6 +560,7 @@ function Header() {
         <button
           className="menu-toggle"
           type="button"
+          ref={menuToggleRef}
           aria-label={t(menuOpen ? "Close navigation menu" : "Open navigation menu")}
           aria-expanded={menuOpen}
           aria-controls="primary-navigation"
@@ -553,7 +577,7 @@ function Header() {
             <SmartNavLink className="main-nav-link" to="/contact" onClick={closeMenu}>{t("Contact")}</SmartNavLink>
           </nav>
           <div className="header-tools">
-            <LanguageSwitcher onSelect={closeMenu} />
+            <LanguageSwitcher onSelect={handleLanguageSelect} />
             <SmartNavLink className="nav-cta" to="/contact" onClick={closeMenu}>
               {t("Let's talk")} <Icon name="arrowUp" size={15} />
             </SmartNavLink>
@@ -594,12 +618,16 @@ function LanguageSwitcher({ onSelect }) {
       if (event.key === "Escape") {
         setIsOpen(false);
         triggerRef.current?.focus();
-      } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      } else if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
         event.preventDefault();
         const options = [...(rootRef.current?.querySelectorAll(".language-option") || [])];
         const focusedIndex = options.indexOf(document.activeElement);
         const currentIndex = focusedIndex < 0 ? activeIndex : focusedIndex;
-        const next = (currentIndex + (event.key === "ArrowDown" ? 1 : LANGUAGES.length - 1)) % LANGUAGES.length;
+        const next = event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? LANGUAGES.length - 1
+            : (currentIndex + (event.key === "ArrowDown" ? 1 : LANGUAGES.length - 1)) % LANGUAGES.length;
         options[next]?.focus();
       }
     };
@@ -620,8 +648,16 @@ function LanguageSwitcher({ onSelect }) {
         aria-label={`${t("Language")}: ${language.toUpperCase()}`}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-controls="language-switcher-menu"
-        onClick={() => setIsOpen((open) => !open)}
+        aria-controls={isOpen ? "language-switcher-menu" : undefined}
+        onClick={() => {
+          const nextIsOpen = !isOpen;
+          setIsOpen(nextIsOpen);
+          if (nextIsOpen) {
+            requestAnimationFrame(() => {
+              rootRef.current?.querySelector('[aria-checked="true"]')?.focus();
+            });
+          }
+        }}
       >
         <FlagIcon code={language} />
         <svg className={`language-chevron${isOpen ? " is-open" : ""}`} width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
@@ -630,16 +666,18 @@ function LanguageSwitcher({ onSelect }) {
       </button>
       {isOpen && (
         <div className="language-switcher-menu" id="language-switcher-menu" role="menu" aria-label={t("Language")}>
-          {LANGUAGES.map(({ code }) => (
+          {LANGUAGES.map(({ code, name }) => (
             <button
               className={`language-option${code === language ? " is-active" : ""}`}
               type="button"
               role="menuitemradio"
+              aria-label={name}
               aria-checked={code === language}
               key={code}
               onClick={() => {
                 setLanguage(code);
                 setIsOpen(false);
+                triggerRef.current?.focus();
                 onSelect();
               }}
             >
@@ -760,6 +798,8 @@ function HeroPhoto() {
         className="hero-image"
         src="/images/home-hero.webp"
         alt={t("A smiling customer-support professional wearing a headset")}
+        loading="eager"
+        fetchpriority="high"
       />
     </div>
   );
@@ -1198,7 +1238,7 @@ function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="form-success-card" role="status" aria-live="polite">
+      <div className="form-success-card" role="status">
         <div className="form-success-star">
           <RingnovaStar size={36} />
         </div>
@@ -1224,7 +1264,7 @@ function ContactForm() {
         <div className="form-row">
           <div className="form-field">
             <label htmlFor="firstName">
-              {t("First Name")} <span className="required-star">*</span>
+              {t("First Name")} <span className="required-star" aria-hidden="true">*</span>
             </label>
             <input
               id="firstName"
@@ -1242,7 +1282,7 @@ function ContactForm() {
           </div>
           <div className="form-field">
             <label htmlFor="lastName">
-              {t("Last Name")} <span className="required-star">*</span>
+              {t("Last Name")} <span className="required-star" aria-hidden="true">*</span>
             </label>
             <input
               id="lastName"
@@ -1262,7 +1302,7 @@ function ContactForm() {
         <div className="form-row">
           <div className="form-field">
             <label htmlFor="email">
-              {t("Work Email")} <span className="required-star">*</span>
+              {t("Work Email")} <span className="required-star" aria-hidden="true">*</span>
             </label>
             <input
               id="email"
@@ -1281,13 +1321,30 @@ function ContactForm() {
           </div>
           <div className="form-field">
             <label htmlFor="phone">{t("Phone Number")}</label>
-            <PhoneInputField
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={(val) => setFormData((prev) => ({ ...prev, phone: val }))}
-              placeholder="1 23 45 67 89"
-            />
+            <React.Suspense
+              fallback={
+                <div className="phone-input-group">
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    dir="ltr"
+                    placeholder="1 23 45 67 89"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="phone-number-input"
+                  />
+                </div>
+              }
+            >
+              <PhoneInputField
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={(val) => setFormData((prev) => ({ ...prev, phone: val }))}
+                placeholder="1 23 45 67 89"
+              />
+            </React.Suspense>
           </div>
         </div>
       </fieldset>
@@ -1431,7 +1488,7 @@ function ContactForm() {
 
       {/* ── Consent ── */}
       <div className="form-consent-wrap">
-        <label className="consent-label" htmlFor="consent">
+        <div className="consent-label">
           <input
             id="consent"
             name="consent"
@@ -1444,10 +1501,12 @@ function ContactForm() {
             aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <span>
-            {t("I agree that the details I provided will be sent to Rangnova so the team can respond to my inquiry. See the")}{" "}
-            <Link to="/privacy">{t("Privacy Policy")}</Link>. <span className="required-star">*</span>
+            <label htmlFor="consent">
+              {t("I agree that the details I provided will be sent to Rangnova so the team can respond to my inquiry. See the")}
+            </label>{" "}
+            <Link to="/privacy">{t("Privacy Policy")}</Link>.             <span className="required-star" aria-hidden="true">*</span>
           </span>
-        </label>
+        </div>
         {errors.consent && <span className="field-error" id="consent-error">{t(errors.consent)}</span>}
       </div>
 
@@ -1859,7 +1918,7 @@ function CareersOpenPositions() {
                           <li key={key}><span>{t(label)}:</span> {t(job[key])}</li>
                         ))}
                         {(job.languageKeys || []).length > 0 && (
-                          <li><span>{t("careers.positions.language")}:</span> {job.languageKeys.map((key) => t(key)).join(", ")}</li>
+                          <li key="languages"><span>{t("careers.positions.language")}:</span> {job.languageKeys.map((key) => t(key)).join(", ")}</li>
                         )}
                       </ul>
                     </div>
@@ -2124,7 +2183,7 @@ function CareersJobDetailPage() {
               <li key={key}><span>{t(label)}:</span> {t(job[key])}</li>
             ))}
             {(job.languageKeys || []).length > 0 && (
-              <li><span>{t("careers.positions.language")}:</span> {job.languageKeys.map((key) => t(key)).join(", ")}</li>
+              <li key="languages"><span>{t("careers.positions.language")}:</span> {job.languageKeys.map((key) => t(key)).join(", ")}</li>
             )}
           </ul>
           {detailSections.map(([key, headingKey, content]) => (
@@ -2213,11 +2272,50 @@ function AnimatedRoutes() {
     const description = document.querySelector('meta[name="description"]');
     let robots = document.querySelector('meta[name="robots"]');
 
+    // Set title and description
     document.title = metadata?.[0] || t("PAGE NOT FOUND") + " | Rangnova";
     if (description) {
       description.content = metadata?.[1] || t("The page may have moved, or the address may be incorrect.");
     }
 
+    // Set Open Graph meta tags
+    const setOrCreateMeta = (name, content, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name';
+      let tag = document.querySelector(`meta[${attr}="${name}"]`);
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.setAttribute(attr, name);
+        document.head.appendChild(tag);
+      }
+      tag.content = content;
+    };
+
+    if (metadata) {
+      const title = metadata[0];
+      const desc = metadata[1];
+      const pageUrl = `https://rangnova.com${path === "/" ? "" : path}`;
+
+      setOrCreateMeta("og:title", title, true);
+      setOrCreateMeta("og:description", desc, true);
+      setOrCreateMeta("og:type", "website", true);
+      setOrCreateMeta("og:url", pageUrl, true);
+      setOrCreateMeta("og:image", "https://rangnova.com/rangnova-mark.webp", true);
+      setOrCreateMeta("twitter:title", title);
+      setOrCreateMeta("twitter:description", desc);
+      setOrCreateMeta("twitter:card", "summary_large_image");
+      setOrCreateMeta("twitter:image", "https://rangnova.com/rangnova-mark.webp");
+
+      // Set canonical URL
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.rel = "canonical";
+        document.head.appendChild(canonicalLink);
+      }
+      canonicalLink.href = pageUrl;
+    }
+
+    // Handle robots meta tag for non-indexed pages
     if (!metadata && !robots) {
       robots = document.createElement("meta");
       robots.name = "robots";

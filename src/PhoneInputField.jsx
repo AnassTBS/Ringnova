@@ -3,9 +3,12 @@ import {
   usePhoneInput,
   defaultCountries,
   parseCountry,
-  FlagImage,
 } from "react-international-phone";
 import { useI18n } from "./i18n";
+
+function countryFlagEmoji(iso2) {
+  return String.fromCodePoint(...iso2.toUpperCase().split("").map((letter) => 127397 + letter.charCodeAt(0)));
+}
 
 /**
  * PhoneInputField
@@ -173,13 +176,13 @@ export function PhoneInputField({
           disabled={disabled}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-controls={`${id}-country-list`}
+          aria-controls={isOpen ? `${id}-country-list` : undefined}
           aria-label={`${t("Select country or calling code")}${currentCountry ? ` (${t("currently")} ${currentCountryName})` : ""}`}
           title={currentCountryName || t("Select country or calling code")}
         >
           {currentCountry && (
-            <span className="phone-flag-icon">
-              <FlagImage iso2={currentCountry.iso2} size="18px" />
+            <span className="phone-flag-icon" aria-hidden="true">
+              {countryFlagEmoji(currentCountry.iso2)}
             </span>
           )}
           <span className="phone-dial-code">+{currentCountry?.dialCode}</span>
@@ -193,6 +196,7 @@ export function PhoneInputField({
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <path d="m6 9 6 6 6-6" />
           </svg>
@@ -228,6 +232,7 @@ export function PhoneInputField({
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+              aria-hidden="true"
             >
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.3-4.3" />
@@ -259,7 +264,9 @@ export function PhoneInputField({
 
           <ul className="phone-dropdown-list" id={`${id}-country-list`} role="listbox" aria-label={t("Countries")}>
             {filteredCountries.length === 0 ? (
-              <li className="phone-no-results">{t("No countries found")}</li>
+              <li className="phone-no-results" role="option" aria-disabled="true" aria-selected="false">
+                {t("No countries found")}
+              </li>
             ) : (
               filteredCountries.map((c) => {
                 const parsed = parseCountry(c);
@@ -274,8 +281,8 @@ export function PhoneInputField({
                     onMouseEnter={() => setActiveIndex(filteredCountries.indexOf(c))}
                     onClick={() => selectCountry(parsed.iso2)}
                   >
-                    <span className="phone-country-flag">
-                      <FlagImage iso2={parsed.iso2} size="18px" />
+                    <span className="phone-country-flag" aria-hidden="true">
+                      {countryFlagEmoji(parsed.iso2)}
                     </span>
                     <span className="phone-country-name">{countryName(parsed)}</span>
                     <span className="phone-country-code">+{parsed.dialCode}</span>
