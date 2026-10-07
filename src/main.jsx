@@ -1012,6 +1012,68 @@ function ServiceRows({ services: list }) {
   );
 }
 
+function ServiceHeroVideo() {
+  const { t } = useI18n();
+  const videoRef = React.useRef(null);
+  const failureReportedRef = React.useRef(false);
+  const [hasStarted, setHasStarted] = React.useState(false);
+  const [playbackFailed, setPlaybackFailed] = React.useState(false);
+
+  const handlePlaybackFailure = React.useCallback((error) => {
+    if (failureReportedRef.current) return;
+    failureReportedRef.current = true;
+    console.warn("Unable to play the Services introduction video; keeping the poster visible.", error);
+    setPlaybackFailed(true);
+    setHasStarted(false);
+  }, []);
+
+  const handlePlay = () => {
+    const video = videoRef.current;
+    if (!video) {
+      handlePlaybackFailure(new Error("The Services introduction video is unavailable."));
+      return;
+    }
+
+    failureReportedRef.current = false;
+    setPlaybackFailed(false);
+    video.src = "/videos/meet-nova.mp4";
+    video.load();
+    video.play().catch((error) => {
+      if (error.name !== "AbortError") handlePlaybackFailure(error);
+    });
+  };
+
+  return (
+    <div className="service-hero-video-stage" data-playing={hasStarted && !playbackFailed ? "true" : "false"}>
+      <img
+        className="service-hero-video-poster"
+        src="/images/services-video-poster.webp"
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <video
+        ref={videoRef}
+        className="service-hero-video"
+        controls={hasStarted && !playbackFailed}
+        muted
+        playsInline
+        preload="none"
+        onPlay={() => setHasStarted(true)}
+        onError={(event) => handlePlaybackFailure(event.currentTarget.error)}
+      />
+      {!hasStarted && !playbackFailed && (
+        <button className="service-hero-video-play" type="button" aria-label={t("Play Meet Nova video")} onClick={handlePlay}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5.75v12.5L18 12 8 5.75Z" fill="currentColor" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+}
+
 function ServicePage() {
   const { t } = useI18n();
   return (
@@ -1022,7 +1084,7 @@ function ServicePage() {
         description={t("Flexible customer communication for the moments that move your business forward. Start with what you need; we'll shape the rest together.")}
         graphicClass="service-photo-wrap"
         heroClass="service-page-hero"
-        graphic={<img className="service-hero-photo" src="/images/services-hero.webp" alt={t("Customer support colleagues wearing headsets at work")} loading="eager" fetchpriority="high" />}
+        graphic={<ServiceHeroVideo />}
       />
       <section className="service-detail-section section-pad">
         <Reveal className="container">
