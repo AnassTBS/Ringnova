@@ -89,6 +89,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .brand:hover .brand-mark { transform: scale(1.05); }
 .brand:hover .brand-star-flare { opacity: 1; transform: scale(1) rotate(90deg); }
 .brand-wordmark { display: block; width: 108px; height: auto; color: #085833; font: 800 19px/1 var(--font-heading); letter-spacing: -.8px; white-space: nowrap; }
+.site-header .brand-wordmark { width: auto; font-size: clamp(26px, 2.15vw, 30px); }
 .brand-wordmark-accent { color: #129a53; }
 .brand-light .brand-wordmark { color: #fff; }
 .footer-brand-block .brand-light .brand-wordmark-accent { color: var(--lime); }
@@ -108,7 +109,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .language-switcher { position: relative; flex: 0 0 auto; }
 .language-switcher-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 40px; min-height: 40px; padding: 0 6px; border: 0; border-radius: 4px; background: transparent; color: #53635e; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
 .language-switcher-trigger:hover, .language-switcher-trigger[aria-expanded="true"] { background: #edf1e9; color: var(--green); }
-.language-flag { display: block; width: 20px; height: 14px; flex: 0 0 auto; overflow: hidden; border-radius: 2px; box-shadow: 0 0 0 1px rgba(24, 51, 47, .12); }
+.language-flag { display: block; width: 20px; height: 14px; flex: 0 0 auto; overflow: hidden; border-radius: 2px; box-shadow: 0 0 0 1px rgba(24, 51, 47, .12); object-fit: cover; }
 .language-chevron { display: block; transition: transform 160ms ease; }
 .language-chevron.is-open { transform: rotate(180deg); }
 .language-switcher-menu { position: absolute; z-index: 30; top: calc(100% + 6px); inset-inline-end: 0; display: grid; min-width: 76px; padding: 4px; border: 1px solid #dce3dc; border-radius: 4px; background: var(--cream); box-shadow: 0 7px 20px rgba(18, 46, 37, .12); animation: language-menu-enter 170ms ease-out both; }

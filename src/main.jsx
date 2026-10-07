@@ -471,7 +471,7 @@ function Brand({ light = false }) {
         <RingnovaStar size={12} className="brand-star-flare" />
       </span>
       <span className="brand-wordmark" aria-hidden="true">
-        <span>Rang</span><span className="brand-wordmark-accent">nova</span>
+        <span>rang</span><span className="brand-wordmark-accent">nova</span>
       </span>
     </SmartNavLink>
   );
