@@ -1057,7 +1057,9 @@ function ServiceHeroVideo() {
         ref={videoRef}
         className="service-hero-video"
         controls={hasStarted && !playbackFailed}
+        autoplay
         muted
+        
         playsInline
         preload="none"
         onPlay={() => setHasStarted(true)}
