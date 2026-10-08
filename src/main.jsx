@@ -590,7 +590,7 @@ function Header() {
 
 function FlagIcon({ code }) {
   const flagMap = {
-    en: "/images/flag-en.svg",
+    en: "/images/flag-en-navbar.svg",
     fr: "/images/flag-fr.svg",
     es: "/images/flag-es.svg",
     de: "/images/flag-de.svg",
@@ -1014,37 +1014,109 @@ function ServiceRows({ services: list }) {
 
 function ServiceHeroVideo() {
   const { t } = useI18n();
-  const videoRef = React.useRef(null);
-  const failureReportedRef = React.useRef(false);
-  const [hasStarted, setHasStarted] = React.useState(false);
-  const [playbackFailed, setPlaybackFailed] = React.useState(false);
+  const heroVideoRef = React.useRef(null);
+  const dialogRef = React.useRef(null);
+  const modalVideoRef = React.useRef(null);
+  const [isHeroAutoplaying, setIsHeroAutoplaying] = React.useState(
+    () => !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const [isHeroVideoReady, setIsHeroVideoReady] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalMuted, setIsModalMuted] = React.useState(false);
+  const [isModalPlaying, setIsModalPlaying] = React.useState(false);
 
-  const handlePlaybackFailure = React.useCallback((error) => {
-    if (failureReportedRef.current) return;
-    failureReportedRef.current = true;
-    console.warn("Unable to play the Services introduction video; keeping the poster visible.", error);
-    setPlaybackFailed(true);
-    setHasStarted(false);
-  }, []);
+  const resetModalVideo = (video) => {
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+    video.muted = true;
+    video.removeAttribute("src");
+    video.load();
+  };
 
-  const handlePlay = () => {
-    const video = videoRef.current;
+  React.useEffect(() => {
+    if (!isHeroAutoplaying) return undefined;
+    const video = heroVideoRef.current;
     if (!video) {
-      handlePlaybackFailure(new Error("The Services introduction video is unavailable."));
-      return;
+      console.warn("Unable to start the Services hero video.");
+      setIsHeroAutoplaying(false);
+      return undefined;
     }
 
-    failureReportedRef.current = false;
-    setPlaybackFailed(false);
-    video.src = "/videos/meet-nova.mp4";
-    video.load();
     video.play().catch((error) => {
-      if (error.name !== "AbortError") handlePlaybackFailure(error);
+      if (error.name === "AbortError") return;
+      if (error.name !== "NotAllowedError") {
+        console.warn("Unable to autoplay the Services hero video.", error);
+      }
+      setIsHeroAutoplaying(false);
     });
+    return () => {
+      video.pause();
+      video.currentTime = 0;
+    };
+  }, [isHeroAutoplaying]);
+
+  React.useEffect(() => {
+    if (!isModalOpen) return undefined;
+    const dialog = dialogRef.current;
+    const video = modalVideoRef.current;
+    if (!dialog || !video) {
+      console.warn("Unable to open the Services introduction video.");
+      setIsModalOpen(false);
+      return undefined;
+    }
+
+    if (!dialog.open) dialog.showModal();
+    video.currentTime = 0;
+    video.muted = false;
+    setIsModalMuted(false);
+    video.play().catch((error) => {
+      if (error.name !== "AbortError") {
+        console.warn("Unable to play the Meet Nova video.", error);
+      }
+    });
+    return () => {
+      resetModalVideo(video);
+      if (dialog.open) dialog.close();
+    };
+  }, [isModalOpen]);
+
+  const handleOpenVideo = () => {
+    setIsHeroAutoplaying(false);
+    setIsHeroVideoReady(false);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseVideo = () => {
+    const video = modalVideoRef.current;
+    resetModalVideo(video);
+    setIsModalPlaying(false);
+    setIsModalMuted(true);
+    setIsModalOpen(false);
+    if (dialogRef.current?.open) dialogRef.current.close();
+  };
+
+  const handleToggleMute = () => {
+    const video = modalVideoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setIsModalMuted(video.muted);
+  };
+
+  const handleToggleModalPlayback = () => {
+    const video = modalVideoRef.current;
+    if (!video) return;
+    if (video.paused || video.ended) {
+      video.play().catch((error) => {
+        if (error.name !== "AbortError") console.warn("Unable to resume the Meet Nova video.", error);
+      });
+    } else {
+      video.pause();
+    }
   };
 
   return (
-    <div className="service-hero-video-stage" data-playing={hasStarted && !playbackFailed ? "true" : "false"}>
+    <div className="service-hero-video-stage" data-playing={isHeroAutoplaying && isHeroVideoReady ? "true" : "false"}>
       <img
         className="service-hero-video-poster"
         src="/images/services-video-poster.webp"
@@ -1053,25 +1125,108 @@ function ServiceHeroVideo() {
         loading="eager"
         fetchpriority="high"
       />
-      <video
-        ref={videoRef}
-        className="service-hero-video"
-        controls={hasStarted && !playbackFailed}
-        autoplay
-        muted
-        
-        playsInline
-        preload="none"
-        onPlay={() => setHasStarted(true)}
-        onError={(event) => handlePlaybackFailure(event.currentTarget.error)}
-      />
-      {!hasStarted && !playbackFailed && (
-        <button className="service-hero-video-play" type="button" aria-label={t("Play Meet Nova video")} onClick={handlePlay}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8 5.75v12.5L18 12 8 5.75Z" fill="currentColor" />
-          </svg>
-        </button>
+      {isHeroAutoplaying && (
+        <video
+          ref={heroVideoRef}
+          className="service-hero-video"
+          src="/videos/meet-nova.mp4"
+          aria-hidden="true"
+          muted
+          playsInline
+          preload="auto"
+          onPlay={() => setIsHeroVideoReady(true)}
+          onEnded={() => {
+            setIsHeroAutoplaying(false);
+            setIsHeroVideoReady(false);
+          }}
+          onError={(event) => {
+            console.warn("Unable to load the Services hero video.", event.currentTarget.error);
+            setIsHeroAutoplaying(false);
+            setIsHeroVideoReady(false);
+          }}
+        />
       )}
+      <div className="service-hero-video-brand" aria-hidden="true">
+        <svg className="service-hero-video-orbit" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M 98 20 A 48 48 0 0 1 97 84" />
+          <circle cx="98" cy="20" r="1.35" />
+        </svg>
+        <RingnovaStar className="service-hero-video-star" size={9} color="var(--green)" />
+        <span>MEET NOVA</span>
+      </div>
+      <button
+        className="service-hero-video-open"
+        type="button"
+        aria-label={t("Open Meet Nova video with sound")}
+        onClick={handleOpenVideo}
+      >
+        {!isHeroAutoplaying && (
+          <span className="service-hero-video-open-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 5.75v12.5L18 12 8 5.75Z" fill="currentColor" />
+            </svg>
+          </span>
+        )}
+      </button>
+      <dialog
+        ref={dialogRef}
+        className="service-hero-video-dialog"
+        aria-label={t("Meet Nova video")}
+        onClose={() => {
+          resetModalVideo(modalVideoRef.current);
+          setIsModalPlaying(false);
+          setIsModalMuted(true);
+          setIsModalOpen(false);
+        }}
+      >
+        <div className="service-hero-video-dialog-header">
+          <button className="service-hero-video-dialog-close" type="button" aria-label={t("Close video")} onClick={handleCloseVideo}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+            </svg>
+          </button>
+          <button
+            className="service-hero-video-dialog-sound"
+            type="button"
+            aria-label={t(isModalMuted ? "Unmute video" : "Mute video")}
+            aria-pressed={!isModalMuted}
+            onClick={handleToggleMute}
+          >
+            {isModalMuted ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <path d="m17 9 5 6m0-6-5 6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <path d="M16 9a5 5 0 0 1 0 6m2-9a9 9 0 0 1 0 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            )}
+          </button>
+        </div>
+        {isModalOpen && (
+          <video
+            ref={modalVideoRef}
+            className="service-hero-video-dialog-player"
+            src="/videos/meet-nova.mp4"
+            aria-label={t(isModalPlaying ? "Pause video" : "Play video")}
+            playsInline
+            preload="none"
+            tabIndex={0}
+            onClick={handleToggleModalPlayback}
+            onKeyDown={(event) => {
+              if (event.key === " " || event.key === "Enter") {
+                event.preventDefault();
+                handleToggleModalPlayback();
+              }
+            }}
+            onPlay={() => setIsModalPlaying(true)}
+            onPause={() => setIsModalPlaying(false)}
+            onEnded={() => setIsModalPlaying(false)}
+          />
+        )}
+      </dialog>
     </div>
   );
 }
