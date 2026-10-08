@@ -608,6 +608,16 @@ html[dir="rtl"] .contact-hero-scrim {
   flex-direction: column;
   gap: var(--space-form-gap);
 }
+.contact-form-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
 .form-section-group {
   display: flex;
   flex-direction: column;

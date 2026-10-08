@@ -498,6 +498,20 @@ function SmartNavLink({ to, onClick, children, className = "", ...rest }) {
     : location.pathname === to || (to === "/careers" && location.pathname.startsWith("/careers/"));
 
   const handleClick = (e) => {
+    const isExternal = typeof to === "string" && (/^[a-z][a-z\d+.-]*:/i.test(to) || to.startsWith("//"));
+    if (
+      e.defaultPrevented ||
+      e.button !== 0 ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey ||
+      e.altKey ||
+      rest.target ||
+      e.currentTarget.target ||
+      e.currentTarget.hasAttribute("download") ||
+      isExternal
+    ) return;
+
     e.preventDefault();
     if (onClick) onClick();
     if (location.pathname === to) {
@@ -1351,8 +1365,26 @@ function AboutPage() {
 
 /* ─── Contact Form (Confirmed Client Structure) ───────────────────────── */
 
+const CONTACT_FIELD_MAX_LENGTHS = {
+  firstName: 100,
+  lastName: 100,
+  email: 254,
+  phone: 40,
+  jobFunction: 120,
+  company: 150,
+  industry: 120,
+  country: 120,
+  service: 120,
+  source: 160,
+  message: 4000,
+};
+const CONTACT_REQUEST_TIMEOUT_MS = 15_000;
+const CONTACT_FIELD_LENGTH_ERROR = "Please shorten any fields that exceed their character limits.";
+
 function ContactForm() {
   const { t } = useI18n();
+  const activeRequestRef = React.useRef(null);
+  const isMountedRef = React.useRef(false);
   const [formData, setFormData] = React.useState({
     firstName: "",
     lastName: "",
@@ -1366,12 +1398,25 @@ function ContactForm() {
     source: "",
     message: "",
     consent: false,
+    website: "",
   });
 
   const [submitted, setSubmitted] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState("");
   const [errors, setErrors] = React.useState({});
+
+  React.useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      if (activeRequestRef.current) {
+        window.clearTimeout(activeRequestRef.current.timeoutId);
+        activeRequestRef.current.controller.abort();
+        activeRequestRef.current = null;
+      }
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -1397,8 +1442,20 @@ function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const oversizedField = Object.entries(CONTACT_FIELD_MAX_LENGTHS).find(
+      ([field, maxLength]) => (formData[field] || "").trim().length > maxLength,
+    );
+    if (oversizedField) {
+      const [field] = oversizedField;
+      setErrors({});
+      setSubmitError(CONTACT_FIELD_LENGTH_ERROR);
+      document.getElementsByName(field)[0]?.focus();
+      return;
+    }
+
     const errs = validate();
     if (Object.keys(errs).length > 0) {
+      setSubmitError("");
       setErrors(errs);
       const firstKey = Object.keys(errs)[0];
       const el = document.getElementsByName(firstKey)[0];
@@ -1406,32 +1463,63 @@ function ContactForm() {
       return;
     }
 
-    if (isSubmitting) return;
+    if (activeRequestRef.current) return;
+    const controller = new AbortController();
+    let timeoutId;
+    let handleAbort;
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = window.setTimeout(() => {
+        controller.abort();
+        reject(new Error("Contact request timed out."));
+      }, CONTACT_REQUEST_TIMEOUT_MS);
+    });
+    const abortPromise = new Promise((_, reject) => {
+      handleAbort = () => reject(new Error("Contact request aborted."));
+      controller.signal.addEventListener("abort", handleAbort, { once: true });
+    });
+    activeRequestRef.current = { controller, timeoutId };
     setIsSubmitting(true);
     setSubmitError("");
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json().catch(() => ({}));
+      const requestPromise = (async () => {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          signal: controller.signal,
+        });
+        const result = await response.json().catch(() => ({}));
+        return { response, result };
+      })();
+      const { response, result } = await Promise.race([
+        requestPromise,
+        timeoutPromise,
+        abortPromise,
+      ]);
 
       if (!response.ok || result.success !== true) {
-        setSubmitError("We couldn’t send your inquiry right now. Please try again.");
+        if (isMountedRef.current) setSubmitError("We couldn’t send your inquiry right now. Please try again.");
         return;
       }
 
-      setSubmitted(true);
-      setSubmitError("");
+      if (isMountedRef.current) {
+        setSubmitted(true);
+        setSubmitError("");
+      }
     } catch {
-      setSubmitError("We couldn’t send your inquiry right now. Please try again.");
+      if (isMountedRef.current) {
+        setSubmitError("We couldn’t send your inquiry right now. Please try again.");
+      }
     } finally {
-      setIsSubmitting(false);
+      window.clearTimeout(timeoutId);
+      controller.signal.removeEventListener("abort", handleAbort);
+      if (activeRequestRef.current?.controller === controller) {
+        activeRequestRef.current = null;
+      }
+      if (isMountedRef.current) setIsSubmitting(false);
     }
   };
 
@@ -1449,6 +1537,7 @@ function ContactForm() {
       source: "",
       message: "",
       consent: false,
+      website: "",
     });
     setErrors({});
     setSubmitError("");
@@ -1474,6 +1563,16 @@ function ContactForm() {
 
   return (
     <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      <div className="contact-form-honeypot" aria-hidden="true">
+        <input
+          type="text"
+          name="website"
+          value={formData.website}
+          onChange={handleChange}
+          autoComplete="off"
+          tabIndex={-1}
+        />
+      </div>
       {/* ── Section 1: Personal Information ── */}
       <fieldset className="form-section-group">
         <legend className="form-section-header">
