@@ -26,6 +26,7 @@ export function PhoneInputField({
   id = "phone",
   name = "phone",
   placeholder = "1 23 45 67 89",
+  autoComplete = "tel-national",
 }) {
   const { language, t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
@@ -215,6 +216,7 @@ export function PhoneInputField({
           onChange={handlePhoneValueChange}
           className="phone-number-input"
           aria-invalid={!!error}
+          autoComplete={autoComplete}
         />
       </div>
 

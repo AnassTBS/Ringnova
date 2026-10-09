@@ -1,0 +1,604 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
+import { useI18n } from "./i18n";
+
+/* ─── Animation primitives & Brand Star ───────────────────────────────── */
+
+export const EASE = [0.2, 0.7, 0.2, 1];
+export const VP = { once: true, margin: "0px 0px -60px 0px" };
+
+export function RingnovaStar({ size = 20, className = "", style = {}, color = "currentColor" }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={color}
+      xmlns="http://www.w3.org/2000/svg"
+      className={`ringnova-star ${className}`}
+      style={style}
+      aria-hidden="true"
+    >
+      <path d="M12 1.5C12 7.298 16.702 12 22.5 12C16.702 12 12 16.702 12 22.5C12 16.702 7.298 12 1.5 12C7.298 12 12 7.298 12 1.5Z" />
+    </svg>
+  );
+}
+
+export function useCompactMotion() {
+  const [isCompact, setIsCompact] = React.useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 700px)").matches,
+  );
+
+  React.useEffect(() => {
+    const query = window.matchMedia("(max-width: 700px)");
+    const update = () => setIsCompact(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return isCompact;
+}
+
+export function Reveal({ children, as = "div", className = "", style, delay = 0 }) {
+  const reduced = useReducedMotion();
+  const compact = useCompactMotion();
+  const Tag = motion[as] || motion.div;
+
+  if (reduced) {
+    const StaticTag = as;
+    return <StaticTag className={className} style={style}>{children}</StaticTag>;
+  }
+
+  return (
+    <Tag
+      className={className}
+      style={style}
+      initial={{ opacity: 0, y: compact ? 9 : 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VP}
+      transition={{ duration: compact ? 0.42 : 0.52, delay, ease: EASE }}
+    >
+      {children}
+    </Tag>
+  );
+}
+
+export function HeroEntrance({ children, as = "div", className = "", style }) {
+  const reduced = useReducedMotion();
+  const compact = useCompactMotion();
+  const Tag = motion[as] || motion.div;
+
+  if (reduced) {
+    const StaticTag = as;
+    return <StaticTag className={className} style={style}>{children}</StaticTag>;
+  }
+
+  return (
+    <Tag
+      className={className}
+      style={style}
+      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: compact ? 9 : 14 }}
+      transition={{ duration: compact ? 0.42 : 0.58, ease: EASE }}
+    >
+      {children}
+    </Tag>
+  );
+}
+
+/* ─── Data ─────────────────────────────────────────────────────────────── */
+
+export const services = [
+  {
+    number: "01",
+    title: "Customer support",
+    description:
+      "Thoughtful, responsive customer care that helps every interaction feel like a good one.",
+    icon: "chat",
+  },
+  {
+    number: "02",
+    title: "Inbound & outbound calls",
+    description:
+      "A dependable extension of your team for the conversations your business needs to have.",
+    icon: "phone",
+  },
+  {
+    number: "03",
+    title: "Lead generation",
+    description:
+      "Build meaningful connections with prospects and give your pipeline room to grow.",
+    icon: "spark",
+  },
+  {
+    number: "04",
+    title: "Appointment setting",
+    description:
+      "Make it easier for the right people to get a conversation on the calendar.",
+    icon: "calendar",
+  },
+  {
+    number: "05",
+    title: "Telemarketing",
+    description:
+      "Personal, professional outreach shaped around your audience and business goals.",
+    icon: "wave",
+  },
+];
+
+export const serviceOptions = services.map(({ title }) => title);
+
+/* ─── Icons ─────────────────────────────────────────────────────────────── */
+
+export function Icon({ name, size = 22, className = "" }) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+    className,
+  };
+
+  const paths = {
+    arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
+    arrowUp: <path d="M7 17 17 7M7 7h10v10" />,
+    menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+    close: <path d="m6 6 12 12M18 6 6 18" />,
+  };
+
+  return <svg {...common}>{paths[name]}</svg>;
+}
+
+export function ServiceIllustration({ type }) {
+  const common = {
+    className: "service-illustration-art",
+    viewBox: "0 0 64 64",
+    fill: "none",
+    "aria-hidden": true,
+  };
+
+  const scenes = {
+    chat: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M13 20.5A13.5 13.5 0 0 1 26.5 7h15A13.5 13.5 0 0 1 55 20.5v5A13.5 13.5 0 0 1 41.5 39H29l-9 6v-8.2A13.4 13.4 0 0 1 13 25.5v-5Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M24 23h.1M32 23h.1M40 23h.1" stroke="#164F43" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M37 43.5A9.5 9.5 0 0 1 46.5 34h4A9.5 9.5 0 0 1 60 43.5v1A9.5 9.5 0 0 1 50.5 54H45l-6 4v-6a9.4 9.4 0 0 1-2-7.5Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="m49 39 .9 2.2 2.1.8-2.1.8L49 46l-.9-2.2-2.1-.8 2.1-.8L49 39Z" fill="#A5C96A" />
+      </>
+    ),
+    phone: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <path d="M17 25a15 15 0 0 1 30 0" stroke="#164F43" strokeWidth="2.4" strokeLinecap="round" />
+        <path d="M16 24h5v15h-5a4 4 0 0 1-4-4v-7a4 4 0 0 1 4-4ZM48 24h-5v15h5a4 4 0 0 0 4-4v-7a4 4 0 0 0-4-4Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M45 40a11 11 0 0 1-11 10h-3" stroke="#164F43" strokeWidth="2" strokeLinecap="round" />
+        <rect x="26" y="47" width="8" height="6" rx="3" fill="#D4EF72" />
+        <path d="M22 17a12 12 0 0 1 20 0" stroke="#A5C96A" strokeWidth="2" strokeLinecap="round" />
+      </>
+    ),
+    spark: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <circle cx="27" cy="23" r="8" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M12 51a15 15 0 0 1 30 0v3H12v-3Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="48" cy="20" r="9" fill="#D4EF72" />
+        <path d="M48 15v10M43 20h10M47 19h2v2h-2z" stroke="#164F43" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="m46 37 2 2 4-5" stroke="#164F43" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    calendar: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <rect x="14" y="14" width="36" height="38" rx="6" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M23 11v9M41 11v9M14 25h36" stroke="#164F43" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M23 33h5v5h-5z" fill="#D9EEE2" />
+        <path d="m34 35 3 3 6-7" stroke="#164F43" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M23 43h5" stroke="#A5C96A" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="49" cy="47" r="8" fill="#D4EF72" />
+        <path d="m46 47 2 2 4-4" stroke="#164F43" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    wave: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M18 23a19 19 0 0 1 28 0M23 29a12 12 0 0 1 18 0" stroke="#A5C96A" strokeWidth="2" strokeLinecap="round" />
+        <path d="m23 34 7-4 5 5 7-4" stroke="#164F43" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18 42.5V40a14 14 0 0 1 28 0v2.5" stroke="#164F43" strokeWidth="2.2" strokeLinecap="round" />
+        <rect x="15" y="40" width="7" height="12" rx="3.5" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <rect x="42" y="40" width="7" height="12" rx="3.5" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M42 52a10 10 0 0 1-10 8h-2" stroke="#164F43" strokeWidth="2" strokeLinecap="round" />
+      </>
+    ),
+    languages: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M15 18.5A8.5 8.5 0 0 1 23.5 10h15a8.5 8.5 0 0 1 0 17h-7l-6 4v-5A8.5 8.5 0 0 1 15 18.5Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M26 18.5h.1M31 18.5h.1M36 18.5h.1" stroke="#164F43" strokeWidth="3" strokeLinecap="round" />
+        <path d="M31 39.5A8.5 8.5 0 0 1 39.5 31h7a8.5 8.5 0 0 1 0 17h-4l-6 4v-5.5a8.5 8.5 0 0 1-5.5-7Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="40" cy="39.5" r="1" fill="#A5C96A" />
+        <circle cx="44" cy="39.5" r="1" fill="#A5C96A" />
+      </>
+    ),
+    trust: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="m32 11 17 6v13c0 11-7.2 19.1-17 23-9.8-3.9-17-12-17-23V17l17-6Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="m23.5 31.5 5.5 5.5 11.5-12" stroke="#164F43" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="48" cy="17" r="7" fill="#D4EF72" />
+        <path d="m48 13 .9 2.1 2.1.9-2.1.9L48 20l-.9-2.1-2.1-.9 2.1-.9L48 13Z" fill="#164F43" />
+      </>
+    ),
+    reliability: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="m32 11 17 6v13c0 11-7.2 19.1-17 23-9.8-3.9-17-12-17-23V17l17-6Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="m23.5 31.5 5.5 5.5 11.5-12" stroke="#164F43" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="48" cy="17" r="7" fill="#D4EF72" />
+      </>
+    ),
+    responsiveness: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M12 20.5A12.5 12.5 0 0 1 24.5 8h17A12.5 12.5 0 0 1 54 20.5v3A12.5 12.5 0 0 1 41.5 36H28l-9 6v-8.1A12.4 12.4 0 0 1 12 23.5v-3Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M24 22h.1M32 22h.1M40 22h.1" stroke="#164F43" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="m47 42 1.3 3.2 3.2 1.3-3.2 1.3L47 51l-1.3-3.2-3.2-1.3 3.2-1.3L47 42Z" fill="#A5C96A" />
+      </>
+    ),
+    flexibility: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <rect x="14" y="15" width="36" height="34" rx="7" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M22 25h20M22 39h20" stroke="#A5C96A" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="29" cy="25" r="4" fill="#D4EF72" stroke="#164F43" strokeWidth="2" />
+        <circle cx="37" cy="39" r="4" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" />
+        <path d="m47 13 .9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z" fill="#164F43" />
+      </>
+    ),
+    connection: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <path d="M9 21.5A10.5 10.5 0 0 1 19.5 11h16A10.5 10.5 0 0 1 46 21.5v2A10.5 10.5 0 0 1 35.5 34H23l-8 5v-7.2A10.4 10.4 0 0 1 9 23.5v-2Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M24 45a8 8 0 0 1 8-8h12a8 8 0 0 1 0 16h-8l-6 4v-6a8 8 0 0 1-6-6Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="20" cy="22" r="1.5" fill="#A5C96A" />
+        <circle cx="27" cy="22" r="1.5" fill="#A5C96A" />
+        <circle cx="34" cy="22" r="1.5" fill="#A5C96A" />
+      </>
+    ),
+    location: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#F2F0E4" />
+        <path d="M32 53s16-15.1 16-29a16 16 0 1 0-32 0c0 13.9 16 29 16 29Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2.2" strokeLinejoin="round" />
+        <circle cx="32" cy="24" r="7" fill="#D9EEE2" stroke="#164F43" strokeWidth="2" />
+        <path d="m32 19 1.2 3h3l-2.4 1.7.9 3-2.7-1.8-2.7 1.8.9-3-2.4-1.7h3L32 19Z" fill="#A5C96A" />
+      </>
+    ),
+    europe: (
+      <>
+        <circle cx="32" cy="32" r="29" fill="#EAF2E8" />
+        <circle cx="31" cy="31" r="18" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="M13 31h36M31 13a29 29 0 0 1 0 36M31 13a29 29 0 0 0 0 36" stroke="#A5C96A" strokeWidth="1.7" />
+        <path d="M45 39a8 8 0 0 1 8 8c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 8-8Z" fill="#D4EF72" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <circle cx="45" cy="47" r="2.3" fill="#164F43" />
+      </>
+    ),
+  };
+
+  return <svg {...common}>{scenes[type]}</svg>;
+}
+
+export function CareerAreaIcon({ type }) {
+  const line = { fill: "none", stroke: "#164F43", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" };
+  const scenes = {
+    "customer-experience": (
+      <>
+        <path d="M8 10a6 6 0 0 1 6-6h9a6 6 0 0 1 6 6v3a6 6 0 0 1-6 6h-7l-5 3v-5a6 6 0 0 1-3-5Z" {...line} />
+        <path d="M13 10h.1m5 0h.1m5 0h.1" {...line} strokeWidth="2.8" />
+        <path d="M22 22h5m-2.5-2.5V25" {...line} stroke="#90B85C" />
+      </>
+    ),
+    sales: (
+      <>
+        <path d="M7 26h26" {...line} />
+        <path d="M10 23v-6h5v6m4 0V12h5v11m4 0V7h5v16" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="m9 13 7-4 5 1 8-6m-1 0h3v3" {...line} stroke="#90B85C" />
+      </>
+    ),
+    telemarketing: (
+      <>
+        <path d="M8 19v-3a12 12 0 0 1 24 0v3" {...line} />
+        <path d="M9 16h4v9h-3a3 3 0 0 1-3-3v-3a3 3 0 0 1 2-3Zm22 0h-4v9h3a3 3 0 0 0 3-3v-3a3 3 0 0 0-2-3Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="M27 25a7 7 0 0 1-7 6h-2" {...line} />
+        <rect x="16" y="29" width="5" height="3" rx="1.5" fill="#D4EF72" stroke="#164F43" strokeWidth="1.4" />
+      </>
+    ),
+    "lead-generation": (
+      <>
+        <path d="M7 8h26l-10 11v7l-6 4V19L7 8Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M27 25v5m-2.5-2.5h5m-1-15 .8 1.8 1.7.7-1.7.7-.8 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z" {...line} stroke="#90B85C" />
+      </>
+    ),
+    "appointment-setting": (
+      <>
+        <rect x="7" y="9" width="26" height="23" rx="4" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.8" />
+        <path d="M13 6v6m14-6v6M7 16h26" {...line} />
+        <path d="m14 23 3 3 6-6" {...line} stroke="#90B85C" strokeWidth="2.2" />
+      </>
+    ),
+    operations: (
+      <>
+        <circle cx="20" cy="20" r="11" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" />
+        <circle cx="20" cy="20" r="4" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.7" />
+        <path d="M20 6v4m0 20v4M6 20h4m20 0h4M10 10l3 3m14 14 3 3m0-20-3 3m-14 14-3 3" {...line} />
+        <path d="m18 20 1.5 1.5L23 18" {...line} stroke="#90B85C" />
+      </>
+    ),
+    "back-office": (
+      <>
+        <path d="M7 12h11l3 3h12v14H7V12Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M10 9h10l3 3m-9 8h13m-13 4h9" {...line} />
+        <path d="M25 18h5" {...line} stroke="#90B85C" />
+      </>
+    ),
+    "corporate-support": (
+      <>
+        <path d="M7 14 20 6l13 8M10 14v16m7-16v16m6-16v16m7-16v16M7 30h26" {...line} />
+        <path d="M5 33h30" {...line} stroke="#90B85C" strokeWidth="2.2" />
+        <circle cx="20" cy="11" r="1.4" fill="#D4EF72" />
+      </>
+    ),
+  };
+
+  return (
+    <svg className="careers-area-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <circle cx="20" cy="20" r="19" fill="#EDF3E7" />
+      {scenes[type]}
+    </svg>
+  );
+}
+
+export function CareerQualityIcon({ type }) {
+  const line = { fill: "none", stroke: "#164F43", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" };
+  const scenes = {
+    communication: (
+      <>
+        <path d="M8 12.5A8.5 8.5 0 0 1 16.5 4h8A8.5 8.5 0 0 1 33 12.5v2a8.5 8.5 0 0 1-8.5 8.5h-7l-6 4v-6.1A8.4 8.4 0 0 1 8 14.5v-2Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M15 13h.1m5 0h.1m5 0h.1" stroke="#164F43" strokeWidth="3" strokeLinecap="round" />
+        <path d="m28 26 1.1 2.5 2.5 1.1-2.5 1.1L28 33l-1.1-2.3-2.5-1.1 2.5-1.1L28 26Z" fill="#A5C96A" />
+      </>
+    ),
+    "customer-mindset": (
+      <>
+        <path d="M20 29S7 21.2 7 12.5a6.4 6.4 0 0 1 11.6-3.8A6.4 6.4 0 0 1 30 12.5C30 21.2 20 29 20 29Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.9" strokeLinejoin="round" />
+        <path d="m17 17 2.2 2.2 4.8-5" {...line} strokeWidth="2" />
+        <circle cx="30" cy="9" r="5" fill="#D4EF72" />
+        <path d="m30 6.5.7 1.7 1.8.7-1.8.7-.7 1.9-.7-1.9-1.8-.7 1.8-.7.7-1.7Z" fill="#164F43" />
+      </>
+    ),
+    reliability: (
+      <>
+        <path d="m20 7 12 4v8c0 7-5 12-12 15-7-3-12-8-12-15v-8l12-4Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" strokeLinejoin="round" />
+        <path d="m13.5 19.5 4.2 4.2 9-10" {...line} strokeWidth="2.7" />
+        <circle cx="31" cy="10" r="5" fill="#D4EF72" />
+      </>
+    ),
+    curiosity: (
+      <>
+        <circle cx="17" cy="17" r="10" fill="#FFFEFA" stroke="#164F43" strokeWidth="2" />
+        <path d="m24.5 24.5 7 7" {...line} strokeWidth="3" />
+        <path d="M17 11v7m-3.5-3.5h7" {...line} stroke="#A5C96A" strokeWidth="2" />
+        <circle cx="29" cy="9" r="4" fill="#D4EF72" />
+      </>
+    ),
+    teamwork: (
+      <>
+        <circle cx="20" cy="13" r="5" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.8" />
+        <circle cx="9.5" cy="16" r="4" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" />
+        <circle cx="30.5" cy="16" r="4" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.7" />
+        <path d="M10 31a10 10 0 0 1 20 0v2H10v-2Z" fill="#D9EEE2" stroke="#164F43" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M4.5 30a6 6 0 0 1 6-6m25 6a6 6 0 0 0-6-6" {...line} />
+        <path d="M18 24h4" {...line} stroke="#A5C96A" strokeWidth="2.4" />
+      </>
+    ),
+    adaptability: (
+      <>
+        <path d="M29 13a11 11 0 0 0-18-3l-3 3m0 0V8m0 5h5M11 27a11 11 0 0 0 18 3l3-3m0 0v5m0-5h-5" {...line} strokeWidth="2.2" />
+        <circle cx="20" cy="20" r="5" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.7" />
+        <path d="m20 16 1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5Z" fill="#A5C96A" />
+      </>
+    ),
+    learning: (
+      <>
+        <path d="M20 12c-4-3-8-4-13-3v20c5-1 9 0 13 3 4-3 8-4 13-3V9c-5-1-9 0-13 3Z" fill="#FFFEFA" stroke="#164F43" strokeWidth="1.9" strokeLinejoin="round" />
+        <path d="M20 12v20m-9-15 5 1m-5 4 5 1m8-6 5-1m-5 5 5-1" {...line} stroke="#A5C96A" strokeWidth="1.7" />
+      </>
+    ),
+  };
+
+  return (
+    <svg className="careers-quality-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <circle cx="20" cy="20" r="19" fill="#EAF2E8" />
+      {scenes[type]}
+    </svg>
+  );
+}
+
+export function WhatsAppLogo({ size = 21 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.999-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.437-9.884 9.888-9.884 2.64.001 5.12 1.03 6.988 2.899a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.438 9.883-9.886 9.883m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 0 5.495 0 12.05a11.98 11.98 0 0 0 1.634 6.034L.001 24l6.056-1.589a12.05 12.05 0 0 0 5.99 1.526h.005c6.554 0 12.05-5.495 12.05-12.05a11.98 11.98 0 0 0-3.638-8.399Z" />
+    </svg>
+  );
+}
+
+/* ─── Shared UI Elements ────────────────────────────────────────────────── */
+
+export function Eyebrow({ children, light = false }) {
+  return (
+    <p className={`eyebrow${light ? " eyebrow-light" : ""}`}>
+      <span className="eyebrow-star-wrap">
+        <RingnovaStar size={11} className="eyebrow-star" />
+      </span>
+      {children}
+    </p>
+  );
+}
+
+export function ButtonLink({ to, children, variant = "primary" }) {
+  return (
+    <Link className={`button button-${variant}`} to={to}>
+      {children}<Icon name="arrow" size={17} />
+    </Link>
+  );
+}
+
+export function ArrowLink({ to, children, light = false, className = "" }) {
+  return (
+    <Link className={`arrow-link${light ? " arrow-link-light" : ""} ${className}`} to={to}>
+      {children}
+      <Icon name="arrow" size={17} />
+    </Link>
+  );
+}
+
+export function BrandOrbit() {
+  return (
+    <div className="about-mark" aria-hidden="true">
+      <span />
+      <span />
+      <span />
+      <div className="about-mark-star"><RingnovaStar size={34} /></div>
+    </div>
+  );
+}
+
+export function PageHero({ eyebrow, title, description, graphic, graphicClass = "", heroClass = "", background }) {
+  return (
+    <HeroEntrance as="section" className={`page-hero${graphic ? " page-hero-graphic" : ""} ${heroClass}`}>
+      {background && <div className="page-hero-bg-layer">{background}</div>}
+      <div className="container page-hero-inner">
+        <div>
+          <Eyebrow>{eyebrow}</Eyebrow>
+          <h1>{title}</h1>
+          <p>{description}</p>
+        </div>
+        {graphic && (
+          <div className={`page-hero-side ${graphicClass}`}>
+            {graphic}
+          </div>
+        )}
+      </div>
+    </HeroEntrance>
+  );
+}
+
+export function CTASection() {
+  const { t } = useI18n();
+  return (
+    <section className="closing-section section-pad">
+      <Reveal className="container closing-panel">
+        <div className="closing-decoration"><span /><span /><span /></div>
+        <div className="closing-content">
+          <Eyebrow>{t("LET'S START A CONVERSATION")}</Eyebrow>
+          <h2>{t("Let's find an approach that ")}<em>{t("fits.")}</em></h2>
+          <p>{t("Tell us what your business needs. We'll take it from there, together.")}</p>
+          <ButtonLink to="/contact">{t("Talk to Rangnova")}</ButtonLink>
+        </div>
+        <div className="closing-aside">
+          <span className="decorative-illustration closing-aside-art"><ServiceIllustration type="chat" /></span><span>{t("It starts with")}<br /><strong>{t("a hello.")}</strong></span><Icon name="arrowUp" size={19} />
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+export function NotFoundPage() {
+  const { t } = useI18n();
+  return (
+    <>
+      <PageHero
+        eyebrow={t("PAGE NOT FOUND")}
+        title={<>{t("This page went")}<br /><em>{t("off script.")}</em></>}
+        description={t("The page may have moved, or the address may be incorrect.")}
+        graphic={<BrandOrbit />}
+      />
+      <section className="privacy-section section-pad">
+        <Reveal className="container privacy-content">
+          <h2>{t("Let's get you back on track.")}</h2>
+          <p>{t("Try the homepage or use the navigation to find what you need.")}</p>
+          <ButtonLink to="/">{t("Back to home")}</ButtonLink>
+        </Reveal>
+      </section>
+    </>
+  );
+}
+
+/* ─── Loading Fallback & Error Boundary ────────────────────────────────── */
+
+export function RouteLoadingFallback() {
+  const { t } = useI18n();
+  return (
+    <div
+      className="route-loading-fallback"
+      role="status"
+      aria-live="polite"
+      aria-label={t("Loading page content") || "Loading page content"}
+    >
+      <div className="route-loading-content">
+        <RingnovaStar size={32} color="var(--green, #164f43)" className="loading-star-spin" />
+        <span className="route-loading-label">{t("Loading...") || "Loading..."}</span>
+      </div>
+    </div>
+  );
+}
+
+export class RouteErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Route error boundary caught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <section className="section-pad route-error-fallback" role="alert">
+          <div className="container" style={{ textAlign: "center", maxWidth: "560px", margin: "48px auto" }}>
+            <h2 style={{ marginBottom: "16px" }}>Unable to load page</h2>
+            <p style={{ color: "var(--muted, #64748B)", marginBottom: "24px" }}>
+              A network error occurred while loading this section. Please check your connection and refresh.
+            </p>
+            <button
+              type="button"
+              className="button button-primary"
+              onClick={() => window.location.reload()}
+            >
+              Refresh page
+            </button>
+          </div>
+        </section>
+      );
+    }
+    return this.props.children;
+  }
+}
