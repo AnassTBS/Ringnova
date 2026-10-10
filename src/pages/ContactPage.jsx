@@ -1,4 +1,5 @@
 import React from "react";
+import { useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useI18n } from "../i18n";
 import {
@@ -494,17 +495,38 @@ function ContactForm() {
 /* ─── ContactHeroVideo ───────────────────────────────────────────────── */
 
 function ContactHeroVideo() {
+  const videoRef = React.useRef(null);
+  const reducedMotion = useReducedMotion();
+
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (reducedMotion) {
+      video.pause();
+      video.currentTime = 0;
+      return;
+    }
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+  }, [reducedMotion]);
+
   return (
     <div className="contact-hero-video-wrap" aria-hidden="true">
-      <img
+      <video
+        ref={videoRef}
         className="contact-hero-video"
-        src="/images/contact-map-poster.webp"
-        alt=""
-        aria-hidden="true"
-        loading="eager"
-        decoding="async"
-        width={1280}
-        height={720}
+        src="/videos/contact-hero.mp4"
+        poster="/images/contact-map-poster.webp"
+        muted
+        playsInline
+        autoPlay={!reducedMotion}
+        loop={false}
+        preload={reducedMotion ? "none" : "auto"}
+        onEnded={(event) => event.currentTarget.pause()}
       />
       <div className="contact-hero-scrim" />
     </div>

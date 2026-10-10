@@ -88,19 +88,24 @@ function ServiceHeroVideo() {
       }
     });
     return () => {
-      resetModalVideo(video);
-      if (dialog.open) dialog.close();
+      if (dialog.open) {
+        resetModalVideo(video);
+        dialog.close();
+      }
     };
   }, [isModalOpen]);
 
   const handleOpenVideo = () => setIsModalOpen(true);
   const handleCloseVideo = () => {
+    const dialog = dialogRef.current;
+    if (!dialog?.open) return;
+
     const video = modalVideoRef.current;
     resetModalVideo(video);
     setIsModalPlaying(false);
     setIsModalMuted(true);
     setIsModalOpen(false);
-    if (dialogRef.current?.open) dialogRef.current.close();
+    dialog.close();
   };
   const handleToggleMute = () => {
     const video = modalVideoRef.current;
@@ -156,8 +161,17 @@ function ServiceHeroVideo() {
         ref={dialogRef}
         className="service-hero-video-dialog"
         aria-label={t("Meet Nova video")}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            handleCloseVideo();
+          }
+        }}
+        onCancel={(event) => {
+          event.preventDefault();
+          handleCloseVideo();
+        }}
         onClose={() => {
-          resetModalVideo(modalVideoRef.current);
           setIsModalPlaying(false);
           setIsModalMuted(true);
           setIsModalOpen(false);
