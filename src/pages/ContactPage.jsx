@@ -158,7 +158,7 @@ function ContactForm() {
       ]);
 
       if (!response.ok || result.success !== true) {
-        if (isMountedRef.current) setSubmitError("We couldn't send your inquiry right now. Please try again.");
+        if (isMountedRef.current) setSubmitError("We couldn’t send your inquiry right now. Please try again.");
         return;
       }
 
@@ -168,7 +168,7 @@ function ContactForm() {
       }
     } catch {
       if (isMountedRef.current) {
-        setSubmitError("We couldn't send your inquiry right now. Please try again.");
+        setSubmitError("We couldn’t send your inquiry right now. Please try again.");
       }
     } finally {
       window.clearTimeout(timeoutId);

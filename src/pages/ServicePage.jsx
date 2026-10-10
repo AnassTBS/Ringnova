@@ -128,7 +128,7 @@ function ServiceHeroVideo() {
         alt=""
         aria-hidden="true"
         loading="eager"
-        fetchpriority="high"
+        fetchPriority="high"
         width={1920}
         height={1080}
       />

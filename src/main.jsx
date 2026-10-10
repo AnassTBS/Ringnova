@@ -815,10 +815,21 @@ function AnimatedRoutes() {
       tag.content = content;
     };
 
+    const OG_LOCALES = {
+      en: "en_US",
+      fr: "fr_FR",
+      es: "es_ES",
+      de: "de_DE",
+      ar: "ar_AR",
+    };
+    setOrCreateMeta("og:locale", OG_LOCALES[language] || "en_US", true);
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+
     if (metadata) {
       const title = metadata[0];
       const desc = metadata[1];
-      const pageUrl = `https://rangnova.com${path === "/" ? "" : path}`;
+      const pageUrl = `https://rangnova.com${path === "/" ? "/" : path}`;
 
       setOrCreateMeta("og:title", title, true);
       setOrCreateMeta("og:description", desc, true);
@@ -831,13 +842,23 @@ function AnimatedRoutes() {
       setOrCreateMeta("twitter:image", "https://rangnova.com/rangnova-mark.webp");
 
       // Set canonical URL
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
       if (!canonicalLink) {
         canonicalLink = document.createElement("link");
         canonicalLink.rel = "canonical";
         document.head.appendChild(canonicalLink);
       }
       canonicalLink.href = pageUrl;
+    } else {
+      // Remove canonical tag on 404 to avoid indexing errors
+      if (canonicalLink) {
+        canonicalLink.remove();
+      }
+      const notFoundTitle = `${t("PAGE NOT FOUND")} | Rangnova`;
+      const notFoundDesc = t("The page may have moved, or the address may be incorrect.");
+      setOrCreateMeta("og:title", notFoundTitle, true);
+      setOrCreateMeta("og:description", notFoundDesc, true);
+      setOrCreateMeta("twitter:title", notFoundTitle);
+      setOrCreateMeta("twitter:description", notFoundDesc);
     }
 
     // Handle robots meta tag for non-indexed pages
