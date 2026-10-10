@@ -978,6 +978,16 @@ function Layout() {
 }
 
 function App() {
+  React.useEffect(() => {
+    const fontStylesheet = document.getElementById("google-fonts");
+    if (!(fontStylesheet instanceof HTMLLinkElement)) {
+      throw new Error("Google Fonts preload link was not found.");
+    }
+
+    fontStylesheet.rel = "stylesheet";
+    fontStylesheet.removeAttribute("as");
+  }, []);
+
   return (
     <LanguageProvider>
       <BrowserRouter>
