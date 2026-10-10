@@ -1414,6 +1414,9 @@ html[dir="rtl"] .contact-hero-scrim {
 
 .phone-flag-icon img {
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 2px;
 }
 
@@ -1583,6 +1586,9 @@ html[dir="rtl"] .contact-hero-scrim {
 .phone-country-flag img {
   border-radius: 2px;
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .phone-country-name {

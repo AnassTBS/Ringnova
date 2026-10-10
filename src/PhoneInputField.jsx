@@ -10,6 +10,25 @@ function countryFlagEmoji(iso2) {
   return String.fromCodePoint(...iso2.toUpperCase().split("").map((letter) => 127397 + letter.charCodeAt(0)));
 }
 
+const countryFlagImages = {
+  ma: "/images/flag-ma.svg",
+  fr: "/images/flag-fr.svg",
+  gb: "/images/flag-en.svg",
+  de: "/images/flag-de.svg",
+  es: "/images/flag-es.svg",
+  it: "/images/flag-it.svg",
+  be: "/images/flag-be.svg",
+  nl: "/images/flag-nl.svg",
+  us: "/images/flag-us.svg",
+};
+
+function CountryFlag({ iso2 }) {
+  const src = countryFlagImages[iso2.toLowerCase()];
+  return src
+    ? <img src={src} alt="" aria-hidden="true" />
+    : countryFlagEmoji(iso2);
+}
+
 /**
  * PhoneInputField
  * A custom international phone input with:
@@ -183,7 +202,7 @@ export function PhoneInputField({
         >
           {currentCountry && (
             <span className="phone-flag-icon" aria-hidden="true">
-              {countryFlagEmoji(currentCountry.iso2)}
+              <CountryFlag iso2={currentCountry.iso2} />
             </span>
           )}
           <span className="phone-dial-code">+{currentCountry?.dialCode}</span>
@@ -284,7 +303,7 @@ export function PhoneInputField({
                     onClick={() => selectCountry(parsed.iso2)}
                   >
                     <span className="phone-country-flag" aria-hidden="true">
-                      {countryFlagEmoji(parsed.iso2)}
+                      <CountryFlag iso2={parsed.iso2} />
                     </span>
                     <span className="phone-country-name">{countryName(parsed)}</span>
                     <span className="phone-country-code">+{parsed.dialCode}</span>

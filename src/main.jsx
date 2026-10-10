@@ -744,14 +744,14 @@ function Footer() {
             <p className="footer-label">{t("Let's connect")}</p>
             <span>{t("Serving businesses across Europe")}</span>
             <span>{t("Team based in Morocco")}</span>
-            <span>{t("English Â· FranÃ§ais Â· Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©")}</span>
+            <span>{t("English · Français · العربية")}</span>
           </div>
           <a className="footer-top" href="#top" aria-label={t("Back to top")}>
             <Icon name="arrowUp" />
           </a>
         </div>
         <div className="footer-bottom">
-          <span>Â© {new Date().getFullYear()} Rangnova. {t("All rights reserved.")}</span>
+          <span>© {new Date().getFullYear()} Rangnova. {t("All rights reserved.")}</span>
           <Link to="/privacy">{t("Privacy policy")}</Link>
           <span>{t("Made for better conversations.")}</span>
         </div>
